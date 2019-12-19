@@ -1,0 +1,97 @@
+{
+    "name": "ecobee",
+    "description": "Did you know?     ??? Thermostats represent 50-70% of your home energy use.  ??? The average ecobee customer saves 26% on their energy bill each year.  ??? 96% of ecobee customers would recommend ecobee to a friend.  ??? Over 80% of ecobee customers run an ene...",
+    "image": "http:\/\/kinlane-productions.s3.amazonaws.com\/screen-capture-api\/1835-ecobee.jpg",
+    "tags": [
+        "api provider",
+        "api service provider",
+        "automation",
+        "energy",
+        "have api",
+        "internet of things",
+        "thermostats"
+    ],
+    "created": "2019-12-19",
+    "modified": "2019-12-19",
+    "url": "https:\/\/raw.githubusercontent.com\/api-evangelist\/ecobee\/master\/apis.json",
+    "specificationVersion": "0.14",
+    "apis": [
+        {
+            "name": "ecobee",
+            "description": null,
+            "image": "http:\/\/kinlane-productions.s3.amazonaws.com\/screen-capture-api\/1835-ecobee.jpg",
+            "humanURL": "http:\/\/www.ecobee.com\/",
+            "baseURL": "",
+            "tags": [],
+            "properties": [
+                {
+                    "type": "x-openapi",
+                    "url": "https:\/\/raw.githubusercontent.com\/api-evangelist\/1forge\/master\/ecobee-openapi.json"
+                }
+            ]
+        }
+    ],
+    "include": [],
+    "x-common": [
+        {
+            "type": "Blog",
+            "url": "http:\/\/www.ecobee.com\/blog\/"
+        },
+        {
+            "type": "Crunchbase",
+            "url": "http:\/\/www.crunchbase.com\/company\/ecobee"
+        },
+        {
+            "type": "Crunchbase",
+            "url": "https:\/\/crunchbase.com\/organization\/ecobee"
+        },
+        {
+            "type": "Email",
+            "url": "info@ecobee.com"
+        },
+        {
+            "type": "Email",
+            "url": "jay@ecobee.com"
+        },
+        {
+            "type": "Email",
+            "url": "jamesb@ecobee.com"
+        },
+        {
+            "type": "Email",
+            "url": "andyk@ecobee.com"
+        },
+        {
+            "type": "Email",
+            "url": "travis@ecobee.com"
+        },
+        {
+            "type": "Email",
+            "url": "bobby@ecobee.com"
+        },
+        {
+            "type": "Email",
+            "url": "jmackinnon@ecobee.com"
+        },
+        {
+            "type": "Email",
+            "url": "nick.s@ecobee.com"
+        },
+        {
+            "type": "Email",
+            "url": "chrisv@ecobee.com"
+        },
+        {
+            "type": "Email",
+            "url": "nathan@ecobee.com"
+        },
+        {
+            "type": "Twitter",
+            "url": "http:\/\/twitter.com\/ecobee"
+        },
+        {
+            "type": "Website",
+            "url": "http:\/\/www.ecobee.com\/"
+        }
+    ]
+}
