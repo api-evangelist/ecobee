@@ -1,0 +1,126 @@
+aid: ecobee
+name: ecobee
+review:
+  question: Does ecobee expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-03'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. ecobee's public API is a REST-like JSON
+    interface with no server-push transport (no WebSocket and no Server-Sent
+    Events) to model. The documented pattern for staying current with device
+    state is client-initiated polling of GET /thermostatSummary (a revision
+    list) - explicitly bounded to no more than once every three minutes - not a
+    streaming or push channel. There is therefore nothing on ecobee's own API
+    surface for an AsyncAPI document to describe.
+findings:
+  summary: |
+    ecobee does not publish a documented public WebSocket API. The ecobee API is
+    a REST-like JSON interface based at https://api.ecobee.com/1, authenticated
+    with an OAuth 2.0 Bearer access token. Clients read thermostat state with
+    GET /thermostat and detect changes by polling GET /thermostatSummary; they
+    control thermostats with POST /thermostat (writable properties plus
+    thermostat functions), pull history via GET /runtimeReport and GET
+    /meterReport, group thermostats via /group, and - for EMS and Utility
+    accounts - organize fleets via /hierarchy/* and issue /demandResponse
+    events. All of these are request/response HTTPS calls. The recommended way
+    to track state is polling with a minimum three-minute interval and no more
+    than two to three concurrent requests; there is no realtime, bidirectional,
+    or streaming WebSocket (ws:// or wss://) endpoint documented anywhere in the
+    ecobee API.
+  developerProgramStatus: |
+    ecobee's consumer developer program is closed to new API-key registrations.
+    Reporting from late 2024 (and confirmed by downstream integrators such as
+    Home Assistant) indicates ecobee stopped issuing new developer API keys;
+    existing keys continue to function, and some integrations have moved to
+    alternative auth. The underlying v1 API (endpoints, objects, OAuth PIN and
+    authorization-code flows) remains documented and operational for holders of
+    valid keys, and EMS/Utility access is arranged commercially with ecobee.
+    This catalog documents the API honestly as real but with restricted new
+    onboarding.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.ecobee.com/1
+      documented: true
+      note: REST-like JSON data plane. Bearer access token required on all requests.
+    - protocol: OAuth
+      scheme: https
+      baseURL: https://api.ecobee.com
+      documented: true
+      note: OAuth 2.0 authorize/token endpoints on the host root (ecobee PIN, authorization code, refresh token grants).
+    - protocol: HTTP Polling
+      scheme: https
+      documented: true
+      note: GET /thermostatSummary revision list, polled no more than once every three minutes. Client-initiated, not server push.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in the ecobee API as of the review date.
+    - protocol: SSE
+      scheme: https
+      documented: false
+      note: No Server-Sent Events streaming surface is documented on the ecobee API.
+  endpointsConfirmedRest:
+    - GET  https://api.ecobee.com/1/thermostat
+    - POST https://api.ecobee.com/1/thermostat
+    - GET  https://api.ecobee.com/1/thermostatSummary
+    - GET  https://api.ecobee.com/1/runtimeReport
+    - GET  https://api.ecobee.com/1/group
+    - POST https://api.ecobee.com/1/group
+    - POST https://api.ecobee.com/1/demandResponse
+    - POST https://api.ecobee.com/1/hierarchy/thermostat
+    - GET  https://api.ecobee.com/authorize
+    - POST https://api.ecobee.com/token
+  endpointsModeledRest:
+    - GET  https://api.ecobee.com/1/meterReport
+    - GET  https://api.ecobee.com/1/demandResponse
+    - GET  https://api.ecobee.com/1/hierarchy/set
+    - POST https://api.ecobee.com/1/hierarchy/set
+    - GET  https://api.ecobee.com/1/hierarchy/user
+    - POST https://api.ecobee.com/1/hierarchy/user
+  sources:
+    - url: https://www.ecobee.com/home/developer/api/introduction/index.shtml
+      type: Documentation
+      note: Getting Started - REST-like JSON API, OAuth 2.0, base https://api.ecobee.com/1. No WebSocket.
+    - url: https://www.ecobee.com/home/developer/api/documentation/v1/operations/get-thermostats.shtml
+      type: APIReference
+      note: GET /thermostat with a json selection query parameter. Confirmed.
+    - url: https://www.ecobee.com/home/developer/api/documentation/v1/operations/get-thermostat-summary.shtml
+      type: APIReference
+      note: GET /thermostatSummary revision list; poll at most every 3 minutes, 2-3 concurrent requests. Confirmed.
+    - url: https://www.ecobee.com/home/developer/api/documentation/v1/operations/post-update-thermostats.shtml
+      type: APIReference
+      note: POST /thermostat?format=json for property updates and thermostat functions. Confirmed.
+    - url: https://www.ecobee.com/home/developer/api/documentation/v1/operations/get-runtime-report.shtml
+      type: APIReference
+      note: GET /runtimeReport?format=json; 25 thermostats / 31-day max per request. Confirmed.
+    - url: https://www.ecobee.com/home/developer/api/documentation/v1/operations/get-group.shtml
+      type: APIReference
+      note: GET/POST /group. Smart accounts only. Confirmed.
+    - url: https://www.ecobee.com/home/developer/api/documentation/v1/operations/post-issue-demand-response.shtml
+      type: APIReference
+      note: POST /demandResponse to issue events. Utility accounts only. Confirmed.
+    - url: https://www.ecobee.com/home/developer/api/documentation/v1/operations/hierarchy/getting-started-management-set-hierarchy.shtml
+      type: Documentation
+      note: /hierarchy operations for sets, users, and thermostats. EMS/Utility accounts only.
+    - url: https://www.ecobee.com/home/developer/api/documentation/v1/auth/pin-api-authorization.shtml
+      type: Authentication
+      note: GET /authorize (response_type=ecobeePin) and POST /token (grant_type=ecobeePin) on host root. Confirmed.
+    - url: https://www.ecobee.com/home/developer/api/documentation/v1/auth/token-refresh.shtml
+      type: Authentication
+      note: POST /token with grant_type=refresh_token to refresh access tokens. Confirmed.
+    - url: https://github.com/home-assistant/core/issues/131789
+      type: Reference
+      note: Third-party report that ecobee shut its developer program to new API keys (late 2024); existing keys still work.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket (or SSE) protocol surface exists on ecobee's API, so no
+    AsyncAPI document was created. ecobee's own public API is request/response
+    REST over HTTPS plus OAuth 2.0, with change tracking done by client-side
+    polling of /thermostatSummary. The apis.yml, OpenAPI, plans, rate-limits,
+    finops, and collection artifacts document that REST surface, and the
+    developer-program-closed status is recorded honestly across the descriptor.

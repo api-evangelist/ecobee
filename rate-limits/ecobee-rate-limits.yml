@@ -1,0 +1,65 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: ecobee
+providerId: ecobee
+created: '2026-07-03'
+modified: '2026-07-03'
+reconciled: false
+tags:
+- Smart Home
+- Thermostat
+- IoT
+- Rate Limiting
+- Polling
+description: >-
+  ecobee does not publish a single numeric per-minute request quota. Instead its
+  documentation gives explicit polling guidance and per-request bounds. Callers
+  should poll for thermostat changes no more frequently than once every three
+  minutes - using GET /thermostatSummary to detect revisions and only fetching
+  full thermostat objects when a revision changes - and should keep no more than
+  two to three concurrent HTTP requests open at a time. Reports carry hard
+  per-request limits: the runtime report is capped at 25 thermostats and a
+  31-day period per request.
+notes: >-
+  Access tokens expire (commonly around one hour) and must be refreshed with the
+  refresh_token grant. Excessive polling or too many concurrent connections can
+  lead to throttling. Verify current thresholds in the ecobee API documentation,
+  as exact numeric account-level limits are not published.
+sources:
+- https://www.ecobee.com/home/developer/api/documentation/v1/operations/get-thermostat-summary.shtml
+- https://www.ecobee.com/home/developer/api/documentation/v1/operations/get-runtime-report.shtml
+- https://www.ecobee.com/home/developer/api/documentation/v1/auth/token-refresh.shtml
+responseCodes:
+  throttled: 429
+limits:
+- name: Thermostat Polling Interval
+  scope: application
+  metric: requests
+  limit: no more than once per 3 minutes
+  notes: Poll GET /thermostatSummary at most every three minutes; only fetch full objects when a revision changes.
+- name: Concurrent Requests
+  scope: application
+  metric: connections
+  limit: 2-3 concurrent
+  notes: Keep no more than two to three concurrent HTTP requests open at a time.
+- name: Runtime Report Size
+  scope: request
+  metric: thermostats
+  limit: 25 thermostats, 31 days
+  notes: A single runtime report request is limited to 25 thermostats and a maximum 31-day period.
+- name: Access Token Lifetime
+  scope: token
+  metric: minutes
+  limit: ~60 minutes
+  notes: Access tokens are short-lived and must be refreshed via the refresh_token grant.
+policies:
+- name: Revision-Based Polling
+  description: Use the thermostatSummary revision list to detect changes efficiently instead of repeatedly requesting full thermostat objects.
+- name: Token Refresh
+  description: Refresh expired access tokens with grant_type=refresh_token rather than re-running the full authorization flow.
+- name: Backoff
+  description: On throttling or errors, implement exponential backoff with jitter and reduce polling frequency and concurrency.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

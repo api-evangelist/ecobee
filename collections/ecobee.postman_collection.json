@@ -1,0 +1,352 @@
+{
+  "info": {
+    "name": "ecobee API",
+    "description": "REST-like JSON API for reading and controlling registered ecobee smart thermostats. Data plane base URL: https://api.ecobee.com/1 (Bearer access token required). OAuth authorize/token endpoints live on the host root https://api.ecobee.com. NOTE: ecobee closed its developer program to new API-key registrations in late 2024; existing keys still function.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{accessToken}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://api.ecobee.com/1", "type": "string" },
+    { "key": "authUrl", "value": "https://api.ecobee.com", "type": "string" },
+    { "key": "accessToken", "value": "", "type": "string" },
+    { "key": "refreshToken", "value": "", "type": "string" },
+    { "key": "clientId", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Thermostat",
+      "item": [
+        {
+          "name": "Get Thermostats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/thermostat?json={\"selection\":{\"selectionType\":\"registered\",\"selectionMatch\":\"\",\"includeRuntime\":true,\"includeSettings\":true,\"includeEvents\":true}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["thermostat"],
+              "query": [
+                { "key": "json", "value": "{\"selection\":{\"selectionType\":\"registered\",\"selectionMatch\":\"\",\"includeRuntime\":true,\"includeSettings\":true,\"includeEvents\":true}}" }
+              ]
+            },
+            "description": "Retrieves registered thermostats and their requested data (runtime, settings, events, sensors)."
+          }
+        },
+        {
+          "name": "Get Thermostat Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/thermostatSummary?json={\"selection\":{\"selectionType\":\"registered\",\"selectionMatch\":\"\",\"includeEquipmentStatus\":true}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["thermostatSummary"],
+              "query": [
+                { "key": "json", "value": "{\"selection\":{\"selectionType\":\"registered\",\"selectionMatch\":\"\",\"includeEquipmentStatus\":true}}" }
+              ]
+            },
+            "description": "Returns a compact revision-list summary to detect changes without re-fetching full objects. Poll at most once every three minutes."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Thermostat Update",
+      "item": [
+        {
+          "name": "Update Thermostat and Run Functions",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"selection\": {\n    \"selectionType\": \"thermostats\",\n    \"selectionMatch\": \"THERMOSTAT_ID\"\n  },\n  \"functions\": [\n    {\n      \"type\": \"setHold\",\n      \"params\": {\n        \"holdType\": \"nextTransition\",\n        \"heatHoldTemp\": 700,\n        \"coolHoldTemp\": 750\n      }\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/thermostat?format=json",
+              "host": ["{{baseUrl}}"],
+              "path": ["thermostat"],
+              "query": [{ "key": "format", "value": "json" }]
+            },
+            "description": "Updates writable thermostat properties and/or runs thermostat functions (setHold, resumeProgram, sendMessage, etc.). Requires smartWrite scope."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Get Runtime Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/runtimeReport?format=json&body={\"startDate\":\"2026-06-01\",\"endDate\":\"2026-06-07\",\"columns\":\"zoneAveTemp,zoneHeatTemp,zoneCoolTemp,compHeat1,compCool1\",\"selection\":{\"selectionType\":\"thermostats\",\"selectionMatch\":\"THERMOSTAT_ID\"}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["runtimeReport"],
+              "query": [
+                { "key": "format", "value": "json" },
+                { "key": "body", "value": "{\"startDate\":\"2026-06-01\",\"endDate\":\"2026-06-07\",\"columns\":\"zoneAveTemp,zoneHeatTemp,zoneCoolTemp,compHeat1,compCool1\",\"selection\":{\"selectionType\":\"thermostats\",\"selectionMatch\":\"THERMOSTAT_ID\"}}" }
+              ]
+            },
+            "description": "Retrieves historical five-minute-interval runtime data. Limited to 25 thermostats and a 31-day period per request."
+          }
+        },
+        {
+          "name": "Get Meter Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/meterReport?format=json&body={\"startDate\":\"2026-06-01\",\"endDate\":\"2026-06-07\",\"selection\":{\"selectionType\":\"thermostats\",\"selectionMatch\":\"THERMOSTAT_ID\"}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["meterReport"],
+              "query": [
+                { "key": "format", "value": "json" },
+                { "key": "body", "value": "{\"startDate\":\"2026-06-01\",\"endDate\":\"2026-06-07\",\"selection\":{\"selectionType\":\"thermostats\",\"selectionMatch\":\"THERMOSTAT_ID\"}}" }
+              ]
+            },
+            "description": "Retrieves meter reading history for a set of thermostats. EMS and Utility accounts only."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Group",
+      "item": [
+        {
+          "name": "Get Groups",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/group?json={\"selection\":{\"selectionType\":\"registered\",\"selectionMatch\":\"\"}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["group"],
+              "query": [
+                { "key": "json", "value": "{\"selection\":{\"selectionType\":\"registered\",\"selectionMatch\":\"\"}}" }
+              ]
+            },
+            "description": "Retrieves the group and grouping data for the user's thermostats. Smart accounts only."
+          }
+        },
+        {
+          "name": "Update Groups",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"selection\": {\n    \"selectionType\": \"registered\",\n    \"selectionMatch\": \"\"\n  },\n  \"groups\": [\n    {\n      \"groupName\": \"Upstairs\",\n      \"thermostats\": [\"THERMOSTAT_ID\"],\n      \"synchronizeVacation\": true\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/group?format=json",
+              "host": ["{{baseUrl}}"],
+              "path": ["group"],
+              "query": [{ "key": "format", "value": "json" }]
+            },
+            "description": "Creates or updates the grouping of the user's thermostats. Smart accounts only."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Demand Response",
+      "item": [
+        {
+          "name": "List Demand Responses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/demandResponse?json={\"selection\":{\"selectionType\":\"managementSet\",\"selectionMatch\":\"/\"}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["demandResponse"],
+              "query": [
+                { "key": "json", "value": "{\"selection\":{\"selectionType\":\"managementSet\",\"selectionMatch\":\"/\"}}" }
+              ]
+            },
+            "description": "Lists demand response events. Utility accounts only."
+          }
+        },
+        {
+          "name": "Issue Demand Response",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"selection\": {\n    \"selectionType\": \"thermostats\",\n    \"selectionMatch\": \"THERMOSTAT_ID\"\n  },\n  \"demandResponse\": {\n    \"name\": \"Peak Event\",\n    \"message\": \"Utility peak load event\",\n    \"event\": {\n      \"startDate\": \"2026-07-15\",\n      \"startTime\": \"16:00:00\",\n      \"endDate\": \"2026-07-15\",\n      \"endTime\": \"19:00:00\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/demandResponse?format=json",
+              "host": ["{{baseUrl}}"],
+              "path": ["demandResponse"],
+              "query": [{ "key": "format", "value": "json" }]
+            },
+            "description": "Issues a demand response event to a set of thermostats. Utility accounts only. Send a cancel request body to cancel an event."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hierarchy",
+      "item": [
+        {
+          "name": "Register / Move / Assign Thermostats",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"operation\": \"register\",\n  \"setPath\": \"/Location 1/Group 1\",\n  \"thermostats\": \"THERMOSTAT_ID\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/hierarchy/thermostat?format=json",
+              "host": ["{{baseUrl}}"],
+              "path": ["hierarchy", "thermostat"],
+              "query": [{ "key": "format", "value": "json" }]
+            },
+            "description": "Registers, unregisters, moves, or assigns thermostats in the management-set hierarchy. EMS and Utility accounts only."
+          }
+        },
+        {
+          "name": "List Management Sets",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/hierarchy/set?json={\"operation\":\"list\"}",
+              "host": ["{{baseUrl}}"],
+              "path": ["hierarchy", "set"],
+              "query": [
+                { "key": "json", "value": "{\"operation\":\"list\"}" }
+              ]
+            },
+            "description": "Lists the management sets in the account hierarchy. EMS and Utility accounts only."
+          }
+        },
+        {
+          "name": "Add / Rename / Move Set",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"operation\": \"add\",\n  \"setName\": \"Group 1\",\n  \"parentPath\": \"/Location 1\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/hierarchy/set?format=json",
+              "host": ["{{baseUrl}}"],
+              "path": ["hierarchy", "set"],
+              "query": [{ "key": "format", "value": "json" }]
+            },
+            "description": "Adds, removes, renames, or moves a management set. EMS and Utility accounts only."
+          }
+        },
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/hierarchy/user?json={\"operation\":\"list\"}",
+              "host": ["{{baseUrl}}"],
+              "path": ["hierarchy", "user"],
+              "query": [
+                { "key": "json", "value": "{\"operation\":\"list\"}" }
+              ]
+            },
+            "description": "Lists the users in the account hierarchy. EMS and Utility accounts only."
+          }
+        },
+        {
+          "name": "Add / Update / Remove User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"operation\": \"add\",\n  \"userName\": \"user@example.com\",\n  \"setPath\": \"/Location 1\",\n  \"privileges\": [\"hierarchy\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/hierarchy/user?format=json",
+              "host": ["{{baseUrl}}"],
+              "path": ["hierarchy", "user"],
+              "query": [{ "key": "format", "value": "json" }]
+            },
+            "description": "Adds, updates, removes, or unregisters a user in the hierarchy. EMS and Utility accounts only."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authorization",
+      "item": [
+        {
+          "name": "Authorize (ecobee PIN)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{authUrl}}/authorize?response_type=ecobeePin&client_id={{clientId}}&scope=smartWrite",
+              "host": ["{{authUrl}}"],
+              "path": ["authorize"],
+              "query": [
+                { "key": "response_type", "value": "ecobeePin" },
+                { "key": "client_id", "value": "{{clientId}}" },
+                { "key": "scope", "value": "smartWrite" }
+              ]
+            },
+            "description": "Starts the ecobee PIN flow; returns a PIN, an authorization code, and expiry. The user enters the PIN in the ecobee web portal to grant access."
+          }
+        },
+        {
+          "name": "Token (Exchange PIN Code)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{authUrl}}/token?grant_type=ecobeePin&code=AUTH_CODE&client_id={{clientId}}",
+              "host": ["{{authUrl}}"],
+              "path": ["token"],
+              "query": [
+                { "key": "grant_type", "value": "ecobeePin" },
+                { "key": "code", "value": "AUTH_CODE" },
+                { "key": "client_id", "value": "{{clientId}}" }
+              ]
+            },
+            "description": "Exchanges the authorization code for an access token and refresh token."
+          }
+        },
+        {
+          "name": "Token (Refresh)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{authUrl}}/token?grant_type=refresh_token&refresh_token={{refreshToken}}&client_id={{clientId}}",
+              "host": ["{{authUrl}}"],
+              "path": ["token"],
+              "query": [
+                { "key": "grant_type", "value": "refresh_token" },
+                { "key": "refresh_token", "value": "{{refreshToken}}" },
+                { "key": "client_id", "value": "{{clientId}}" }
+              ]
+            },
+            "description": "Refreshes an expired access token using the refresh token."
+          }
+        }
+      ]
+    }
+  ]
+}

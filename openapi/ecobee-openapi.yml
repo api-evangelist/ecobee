@@ -1,0 +1,962 @@
+openapi: 3.0.3
+info:
+  title: ecobee API
+  description: >-
+    The ecobee API is a REST-like JSON interface for reading and controlling
+    registered ecobee smart thermostats and connected home devices. The data
+    plane is based at https://api.ecobee.com/1 and returns/accepts JSON. Read
+    thermostat runtime, settings, sensors, and equipment status with GET
+    /thermostat, poll for change efficiently with GET /thermostatSummary, and
+    apply writable properties and thermostat functions with POST /thermostat.
+    Historical data is available via GET /runtimeReport and GET /meterReport.
+    Thermostats can be grouped (/group) and, for EMS and Utility accounts,
+    organized in a management-set hierarchy (/hierarchy/*) and driven with
+    demand response events (/demandResponse).
+
+    Authorization uses OAuth 2.0 with an ecobee PIN flow or the standard
+    authorization-code flow, plus refresh tokens; the OAuth endpoints
+    (/authorize and /token) live on the host root https://api.ecobee.com
+    (without the /1 path). All data-plane requests require an
+    `Authorization: Bearer ACCESS_TOKEN` header.
+
+    NOTE - as of late 2024, ecobee closed its developer program to new API-key
+    registrations; existing keys continue to function. Endpoint shapes below are
+    grounded in ecobee's published v1 API documentation; request/response
+    schemas are simplified models of the documented objects.
+  version: '1.0'
+  contact:
+    name: ecobee Developer
+    url: https://www.ecobee.com/home/developer/api/introduction/index.shtml
+servers:
+  - url: https://api.ecobee.com/1
+    description: ecobee API data plane (v1)
+  - url: https://api.ecobee.com
+    description: ecobee OAuth 2.0 authorization host (authorize / token)
+security:
+  - bearerAuth: []
+tags:
+  - name: Thermostat
+    description: Read thermostat state and poll for changes.
+  - name: Thermostat Update
+    description: Update writable properties and run thermostat functions.
+  - name: Reports
+    description: Historical runtime and meter reports.
+  - name: Group
+    description: Group registered thermostats.
+  - name: Demand Response
+    description: Utility demand response events.
+  - name: Hierarchy
+    description: EMS/Utility management-set hierarchy of thermostats, sets, and users.
+  - name: Authorization
+    description: OAuth 2.0 PIN and authorization-code flows and token refresh.
+paths:
+  /thermostat:
+    get:
+      operationId: getThermostats
+      tags:
+        - Thermostat
+      summary: Get thermostats
+      description: >-
+        Retrieves a selection of registered thermostats and their requested data
+        (runtime, settings, program, events, alerts, sensors, and more). The
+        Selection object in the `json` query parameter determines which
+        thermostats and which sub-objects are returned.
+      parameters:
+        - name: json
+          in: query
+          required: true
+          description: >-
+            URL-encoded JSON request containing a `selection` object (and optional
+            `page`) that determines the thermostats and data returned.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The matching thermostats and requested data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThermostatResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: updateThermostats
+      tags:
+        - Thermostat Update
+      summary: Update thermostats and run functions
+      description: >-
+        Updates writable thermostat properties and/or executes one or more
+        thermostat functions against a selection of thermostats. Functions are
+        applied in the order listed. Accessible by Smart and EMS accounts;
+        requires the smartWrite scope.
+      parameters:
+        - name: format
+          in: query
+          required: true
+          description: Response format. Always `json`.
+          schema:
+            type: string
+            default: json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateThermostatRequest'
+      responses:
+        '200':
+          description: A Status object indicating success or failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ApiError'
+  /thermostatSummary:
+    get:
+      operationId: getThermostatSummary
+      tags:
+        - Thermostat
+      summary: Get thermostat summary
+      description: >-
+        Returns a compact revision-list summary for the selected thermostats -
+        thermostat id, name, connection status, and configuration/alert/runtime/
+        interval revision timestamps - so callers can detect changes without
+        re-fetching full thermostat objects. Optionally includes equipment
+        status. Poll no more frequently than once every three minutes.
+      parameters:
+        - name: json
+          in: query
+          required: true
+          description: >-
+            URL-encoded JSON request containing a `selection` object. Set
+            `includeEquipmentStatus` to true to also receive equipment status.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Revision list (and optional equipment status) for the selection.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThermostatSummaryResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /runtimeReport:
+    get:
+      operationId: getRuntimeReport
+      tags:
+        - Reports
+      summary: Get runtime report
+      description: >-
+        Retrieves historical five-minute-interval runtime data for a set of
+        thermostats over a date range. Limited to 25 thermostats and a maximum
+        31-day period per request.
+      parameters:
+        - name: format
+          in: query
+          required: true
+          description: Response format. Always `json`.
+          schema:
+            type: string
+            default: json
+        - name: body
+          in: query
+          required: true
+          description: >-
+            URL-encoded JSON request containing `selection`, `startDate`,
+            `endDate`, `columns`, and optional `startInterval`, `endInterval`,
+            and `includeSensors`.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The runtime report rows for the selection.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuntimeReportResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /meterReport:
+    get:
+      operationId: getMeterReport
+      tags:
+        - Reports
+      summary: Get meter report
+      description: >-
+        Retrieves meter reading history (energy / metering data) for a set of
+        thermostats over a bounded date range. Available to EMS and Utility
+        accounts.
+      parameters:
+        - name: format
+          in: query
+          required: true
+          description: Response format. Always `json`.
+          schema:
+            type: string
+            default: json
+        - name: body
+          in: query
+          required: true
+          description: >-
+            URL-encoded JSON request containing `selection`, `startDate`,
+            `endDate`, and the meter `columns` requested.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The meter report rows for the selection.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /group:
+    get:
+      operationId: getGroups
+      tags:
+        - Group
+      summary: Get groups
+      description: >-
+        Retrieves the Group and grouping data for the thermostats registered to
+        the user. Accessible by Smart accounts only.
+      parameters:
+        - name: json
+          in: query
+          required: true
+          description: URL-encoded JSON request containing a `selection` object.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The groups registered to the user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: updateGroups
+      tags:
+        - Group
+      summary: Update groups
+      description: >-
+        Creates or updates the grouping of the user's thermostats. Accessible by
+        Smart accounts only.
+      parameters:
+        - name: format
+          in: query
+          required: true
+          description: Response format. Always `json`.
+          schema:
+            type: string
+            default: json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupRequest'
+      responses:
+        '200':
+          description: A Status object and the updated groups.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /demandResponse:
+    get:
+      operationId: listDemandResponses
+      tags:
+        - Demand Response
+      summary: List demand responses
+      description: >-
+        Lists the Demand Response events. Accessible by Utility accounts only.
+      parameters:
+        - name: json
+          in: query
+          required: true
+          description: URL-encoded JSON request containing the query selection.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The list of demand response events.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: issueDemandResponse
+      tags:
+        - Demand Response
+      summary: Issue or cancel a demand response
+      description: >-
+        Issues a Demand Response event to a set of thermostats to adjust their
+        program, or cancels a previously issued event (via a cancel demand
+        response request body). Accessible by Utility accounts only.
+      parameters:
+        - name: format
+          in: query
+          required: true
+          description: Response format. Always `json`.
+          schema:
+            type: string
+            default: json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DemandResponseRequest'
+      responses:
+        '200':
+          description: A Status object with the demand response reference.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /hierarchy/thermostat:
+    post:
+      operationId: hierarchyThermostat
+      tags:
+        - Hierarchy
+      summary: Register, unregister, move, or assign thermostats
+      description: >-
+        Registers one or more thermostats with the hierarchy and optionally
+        assigns them to a management set, or unregisters, moves, or assigns
+        existing thermostats. The `operation` field selects the action.
+        Accessible by EMS and Utility accounts only.
+      parameters:
+        - name: format
+          in: query
+          required: true
+          description: Response format. Always `json`.
+          schema:
+            type: string
+            default: json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HierarchyThermostatRequest'
+      responses:
+        '200':
+          description: A Status object indicating success or failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /hierarchy/set:
+    get:
+      operationId: listHierarchySets
+      tags:
+        - Hierarchy
+      summary: List management sets
+      description: >-
+        Lists the management sets in the account hierarchy. Accessible by EMS and
+        Utility accounts only.
+      parameters:
+        - name: json
+          in: query
+          required: true
+          description: URL-encoded JSON request containing the set query.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The management sets.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: manageHierarchySet
+      tags:
+        - Hierarchy
+      summary: Add, remove, rename, or move a management set
+      description: >-
+        Adds, removes, renames, or moves a management set. The `operation` field
+        selects the action. Accessible by EMS and Utility accounts only.
+      parameters:
+        - name: format
+          in: query
+          required: true
+          description: Response format. Always `json`.
+          schema:
+            type: string
+            default: json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HierarchySetRequest'
+      responses:
+        '200':
+          description: A Status object indicating success or failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /hierarchy/user:
+    get:
+      operationId: listHierarchyUsers
+      tags:
+        - Hierarchy
+      summary: List hierarchy users
+      description: >-
+        Lists the users in the account hierarchy. Accessible by EMS and Utility
+        accounts only.
+      parameters:
+        - name: json
+          in: query
+          required: true
+          description: URL-encoded JSON request containing the user query.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The hierarchy users.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: manageHierarchyUser
+      tags:
+        - Hierarchy
+      summary: Add, update, remove, or unregister a hierarchy user
+      description: >-
+        Adds, updates, removes, or unregisters a user in the hierarchy. The
+        `operation` field selects the action. Accessible by EMS and Utility
+        accounts only.
+      parameters:
+        - name: format
+          in: query
+          required: true
+          description: Response format. Always `json`.
+          schema:
+            type: string
+            default: json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HierarchyUserRequest'
+      responses:
+        '200':
+          description: A Status object indicating success or failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /authorize:
+    servers:
+      - url: https://api.ecobee.com
+        description: ecobee OAuth 2.0 authorization host
+    get:
+      operationId: authorize
+      tags:
+        - Authorization
+      summary: Begin authorization (PIN or authorization code)
+      description: >-
+        Starts an authorization flow. For the ecobee PIN flow, set
+        `response_type=ecobeePin`; the response returns a PIN, an authorization
+        `code`, and expiry, which the user enters in the ecobee web portal to
+        grant access. For the authorization-code flow, set `response_type=code`
+        with a `redirect_uri`. This endpoint is on the host root, not under /1.
+      security: []
+      parameters:
+        - name: response_type
+          in: query
+          required: true
+          description: '`ecobeePin` for the PIN flow, or `code` for the authorization-code flow.'
+          schema:
+            type: string
+            enum:
+              - ecobeePin
+              - code
+        - name: client_id
+          in: query
+          required: true
+          description: The application key (API key) for your application.
+          schema:
+            type: string
+        - name: scope
+          in: query
+          required: true
+          description: The requested scope.
+          schema:
+            type: string
+            enum:
+              - smartRead
+              - smartWrite
+              - ems
+        - name: redirect_uri
+          in: query
+          required: false
+          description: Redirect URI for the authorization-code flow.
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: false
+          description: Opaque value echoed back for the authorization-code flow.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: PIN, authorization code, and expiry (PIN flow).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PinResponse'
+  /token:
+    servers:
+      - url: https://api.ecobee.com
+        description: ecobee OAuth 2.0 authorization host
+    post:
+      operationId: token
+      tags:
+        - Authorization
+      summary: Exchange or refresh tokens
+      description: >-
+        Exchanges an authorization code for an access token and refresh token
+        (`grant_type=ecobeePin` or `authorization_code`), or refreshes an
+        expired access token (`grant_type=refresh_token`). Parameters are passed
+        as query string. This endpoint is on the host root, not under /1.
+      security: []
+      parameters:
+        - name: grant_type
+          in: query
+          required: true
+          description: The OAuth grant type.
+          schema:
+            type: string
+            enum:
+              - ecobeePin
+              - authorization_code
+              - refresh_token
+        - name: code
+          in: query
+          required: false
+          description: The authorization code (for ecobeePin / authorization_code grants).
+          schema:
+            type: string
+        - name: refresh_token
+          in: query
+          required: false
+          description: The refresh token (for the refresh_token grant).
+          schema:
+            type: string
+        - name: client_id
+          in: query
+          required: true
+          description: The application key (API key) for your application.
+          schema:
+            type: string
+        - name: redirect_uri
+          in: query
+          required: false
+          description: Redirect URI (for the authorization_code grant).
+          schema:
+            type: string
+        - name: ecobee_type
+          in: query
+          required: false
+          description: Set to `jwt` to have the API return access tokens as JWTs.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: An access token, refresh token, scope, and expiry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          $ref: '#/components/responses/ApiError'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: >-
+        OAuth 2.0 access token passed as `Authorization: Bearer ACCESS_TOKEN` on
+        all data-plane requests to https://api.ecobee.com/1.
+  responses:
+    Unauthorized:
+      description: Missing, invalid, or expired access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StatusResponse'
+    ApiError:
+      description: An API error, described by a Status object.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StatusResponse'
+  schemas:
+    Status:
+      type: object
+      description: Standard ecobee response status.
+      properties:
+        code:
+          type: integer
+          description: The status code (0 indicates success).
+        message:
+          type: string
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+    Page:
+      type: object
+      properties:
+        page:
+          type: integer
+        totalPages:
+          type: integer
+        pageSize:
+          type: integer
+        total:
+          type: integer
+    Selection:
+      type: object
+      description: >-
+        Determines which thermostats and which sub-objects are returned or
+        acted upon.
+      required:
+        - selectionType
+      properties:
+        selectionType:
+          type: string
+          enum:
+            - registered
+            - thermostats
+            - managementSet
+          description: How to interpret selectionMatch.
+        selectionMatch:
+          type: string
+          description: >-
+            Comma-separated thermostat identifiers, a management set path, or an
+            empty string for all registered thermostats.
+        includeRuntime:
+          type: boolean
+        includeSettings:
+          type: boolean
+        includeEvents:
+          type: boolean
+        includeSensors:
+          type: boolean
+        includeEquipmentStatus:
+          type: boolean
+        includeAlerts:
+          type: boolean
+        includeProgram:
+          type: boolean
+    Thermostat:
+      type: object
+      properties:
+        identifier:
+          type: string
+        name:
+          type: string
+        thermostatRev:
+          type: string
+        isRegistered:
+          type: boolean
+        modelNumber:
+          type: string
+        brand:
+          type: string
+        runtime:
+          type: object
+          additionalProperties: true
+        settings:
+          type: object
+          additionalProperties: true
+        events:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        remoteSensors:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    ThermostatResponse:
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/Page'
+        thermostatList:
+          type: array
+          items:
+            $ref: '#/components/schemas/Thermostat'
+        status:
+          $ref: '#/components/schemas/Status'
+    ThermostatSummaryResponse:
+      type: object
+      properties:
+        thermostatCount:
+          type: integer
+        revisionList:
+          type: array
+          description: >-
+            Colon-separated values per thermostat - identifier, name, connected,
+            and config/alerts/runtime/interval revision timestamps.
+          items:
+            type: string
+        statusList:
+          type: array
+          description: Colon-separated equipment status per thermostat (when requested).
+          items:
+            type: string
+        status:
+          $ref: '#/components/schemas/Status'
+    Function:
+      type: object
+      description: A thermostat function to execute.
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: >-
+            The function name - e.g. setHold, resumeProgram, sendMessage,
+            createVacation, deleteVacation, setOccupied, controlPlug,
+            updateSensor, acknowledge.
+        params:
+          type: object
+          additionalProperties: true
+    UpdateThermostatRequest:
+      type: object
+      required:
+        - selection
+      properties:
+        selection:
+          $ref: '#/components/schemas/Selection'
+        thermostat:
+          $ref: '#/components/schemas/Thermostat'
+        functions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Function'
+    RuntimeReportRequest:
+      type: object
+      required:
+        - selection
+        - startDate
+        - endDate
+        - columns
+      properties:
+        selection:
+          $ref: '#/components/schemas/Selection'
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        startInterval:
+          type: integer
+          minimum: 0
+          maximum: 287
+          default: 0
+        endInterval:
+          type: integer
+          minimum: 0
+          maximum: 287
+          default: 287
+        columns:
+          type: string
+          description: CSV string of requested runtime columns.
+        includeSensors:
+          type: boolean
+          default: false
+    RuntimeReportRow:
+      type: object
+      properties:
+        thermostatIdentifier:
+          type: string
+        rowCount:
+          type: integer
+        rowList:
+          type: array
+          items:
+            type: string
+    RuntimeReportResponse:
+      type: object
+      properties:
+        startDate:
+          type: string
+        endDate:
+          type: string
+        columns:
+          type: string
+        reportList:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuntimeReportRow'
+        status:
+          $ref: '#/components/schemas/Status'
+    Group:
+      type: object
+      properties:
+        groupRef:
+          type: string
+        groupName:
+          type: string
+        thermostats:
+          type: array
+          items:
+            type: string
+        synchronizeSystemMode:
+          type: boolean
+        synchronizeVacation:
+          type: boolean
+    GroupRequest:
+      type: object
+      required:
+        - selection
+        - groups
+      properties:
+        selection:
+          $ref: '#/components/schemas/Selection'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+    GroupResponse:
+      type: object
+      properties:
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+        status:
+          $ref: '#/components/schemas/Status'
+    DemandResponseRequest:
+      type: object
+      required:
+        - selection
+      properties:
+        selection:
+          $ref: '#/components/schemas/Selection'
+        demandResponse:
+          type: object
+          description: The demand response event definition (name, message, event window, and adjustments).
+          additionalProperties: true
+        demandResponseRef:
+          type: string
+          description: Reference to a demand response to cancel.
+    HierarchyThermostatRequest:
+      type: object
+      required:
+        - operation
+      properties:
+        operation:
+          type: string
+          enum:
+            - register
+            - unregister
+            - move
+            - assign
+        setPath:
+          type: string
+        thermostats:
+          type: string
+          description: Comma-separated thermostat identifiers.
+    HierarchySetRequest:
+      type: object
+      required:
+        - operation
+      properties:
+        operation:
+          type: string
+          enum:
+            - add
+            - remove
+            - rename
+            - move
+        setPath:
+          type: string
+        setName:
+          type: string
+        parentPath:
+          type: string
+    HierarchyUserRequest:
+      type: object
+      required:
+        - operation
+      properties:
+        operation:
+          type: string
+          enum:
+            - add
+            - update
+            - remove
+            - unregister
+        userName:
+          type: string
+        setPath:
+          type: string
+        privileges:
+          type: array
+          items:
+            type: string
+    PinResponse:
+      type: object
+      properties:
+        ecobeePin:
+          type: string
+        code:
+          type: string
+          description: The authorization code to exchange at /token.
+        scope:
+          type: string
+        expires_in:
+          type: integer
+        interval:
+          type: integer
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+        expires_in:
+          type: integer
+        refresh_token:
+          type: string
+        scope:
+          type: string

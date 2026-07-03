@@ -1,0 +1,89 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: ecobee
+providerId: ecobee
+created: '2026-07-03'
+modified: '2026-07-03'
+reconciled: false
+tags:
+- Smart Home
+- Thermostat
+- IoT
+- Energy
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of ecobee API spend. The ecobee developer API has historically
+  been free to use - there is no published per-call fee - so for consumer
+  (Smart-account) integrations the direct API cost is effectively zero and the
+  real cost drivers are engineering, maintenance, and the operational risk that
+  the developer program is closed to new registrations. For EMS and Utility
+  programs (demand response, hierarchy, meter reports), cost is governed by a
+  commercial agreement with ecobee rather than usage-metered API billing.
+notes: >-
+  ecobee does not invoice per API call, so there is no usage-based line item to
+  reconcile for the standard developer program. Model cost as build-and-maintain
+  effort plus, for EMS/Utility, the negotiated commercial contract. Account for
+  program-availability risk: new consumer API keys are no longer being issued.
+sources:
+- https://www.ecobee.com/en-us/developers/
+- https://www.ecobee.com/home/developer/api/introduction/index.shtml
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: ecobee
+serviceCategory: IoT and Smart Home
+billingModel:
+  pricingCategory: Free
+  billingFrequency: None
+  billingCurrency: USD
+  chargeCategories:
+  - Usage
+  - Purchase
+focusColumns:
+  ServiceName: ecobee API
+  ServiceCategory: IoT and Smart Home
+  ProviderName: ecobee
+  PublisherName: ecobee
+  InvoiceIssuerName: ecobee
+  BillingCurrency: USD
+  ChargeCategory: Usage
+  PricingCategory: Free
+meters:
+- name: api_requests
+  description: Calls to the ecobee API. Not billed - included in the free developer program.
+  unit: requests
+  aggregation: sum
+  dimensions:
+  - application
+  - account
+- name: authorized_thermostats
+  description: Number of end-user thermostats an application is authorized to access; a proxy for integration scale, not a billed meter.
+  unit: devices
+  aggregation: max
+  dimensions:
+  - application
+- name: ems_commercial_contract
+  description: Negotiated EMS/Utility commercial agreement for hierarchy, demand response, and meter reports.
+  unit: contract
+  aggregation: max
+  dimensions:
+  - account
+principles:
+- name: Visibility
+  description: Track how many thermostats each application is authorized to access and the polling volume, even though calls are not billed, to manage rate-limit and support risk.
+- name: Allocation
+  description: Attribute integration engineering and maintenance effort to the product or team that owns the ecobee connection.
+- name: Optimization
+  description: Poll efficiently via thermostatSummary revisions to stay within rate guidance and reduce compute; batch report requests within the 25-thermostat / 31-day limits.
+- name: Accountability
+  description: Own the program-availability risk - new consumer API keys are closed - and, for EMS/Utility, review the commercial contract terms with ecobee.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

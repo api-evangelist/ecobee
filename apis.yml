@@ -1,0 +1,235 @@
+aid: ecobee
+url: https://raw.githubusercontent.com/api-evangelist/ecobee/refs/heads/main/apis.yml
+name: ecobee
+kind: company
+description: ecobee makes smart Wi-Fi thermostats, room sensors, cameras, and other
+  connected home devices. The ecobee API is a REST-like JSON interface, based at
+  https://api.ecobee.com/1/, that lets authorized third-party applications read and
+  control registered ecobee thermostats - retrieving live runtime state, settings,
+  sensors, and equipment status, updating programs and comfort settings via thermostat
+  functions, pulling historical runtime and meter reports, grouping thermostats, and
+  (for EMS and Utility accounts) organizing thermostats in a management-set hierarchy
+  and issuing demand response events. Authorization uses OAuth 2.0 with an ecobee PIN
+  flow or the standard authorization-code flow, plus refresh tokens. NOTE - as of late
+  2024 ecobee closed its developer program to new API-key registrations; existing keys
+  continue to function.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Smart Home
+- Thermostat
+- IoT
+- HVAC
+- Energy
+- Home Automation
+- Demand Response
+created: '2026-07-03'
+modified: '2026-07-03'
+specificationVersion: '0.19'
+apis:
+- aid: ecobee:ecobee-thermostat-api
+  name: ecobee Thermostat API
+  tags:
+  - Thermostat
+  - Runtime
+  - Sensors
+  - Polling
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.ecobee.com/home/developer/api/documentation/v1/operations/get-thermostats.shtml
+  baseURL: https://api.ecobee.com/1
+  properties:
+  - url: https://www.ecobee.com/home/developer/api/introduction/index.shtml
+    type: Documentation
+  - url: https://www.ecobee.com/home/developer/api/documentation/v1/operations/get-thermostats.shtml
+    type: APIReference
+  - url: openapi/ecobee-openapi.yml
+    type: OpenAPI
+  - url: collections/ecobee.postman_collection.json
+    type: PostmanCollection
+  - url: collections/ecobee.opencollection.json
+    type: OpenCollection
+  description: Retrieve registered ecobee thermostats and their selectable data - runtime
+    state, settings, program, events, alerts, remote sensors, and equipment status -
+    via GET /thermostat, and poll for changes efficiently with GET /thermostatSummary
+    (a revision-list summary that avoids re-fetching full objects).
+- aid: ecobee:ecobee-thermostat-update-api
+  name: ecobee Thermostat Update and Functions API
+  tags:
+  - Thermostat
+  - Control
+  - Functions
+  - Write
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.ecobee.com/home/developer/api/documentation/v1/operations/post-update-thermostats.shtml
+  baseURL: https://api.ecobee.com/1
+  properties:
+  - url: https://www.ecobee.com/home/developer/api/documentation/v1/operations/post-update-thermostats.shtml
+    type: APIReference
+  - url: openapi/ecobee-openapi.yml
+    type: OpenAPI
+  - url: collections/ecobee.postman_collection.json
+    type: PostmanCollection
+  - url: collections/ecobee.opencollection.json
+    type: OpenCollection
+  description: Update writable thermostat properties and run thermostat functions via
+    POST /thermostat - set hold and comfort settings, resume program, send messages,
+    control fan and vents, and apply other complex changes. Functions are applied in
+    the order listed. Requires the smartWrite scope.
+- aid: ecobee:ecobee-runtime-report-api
+  name: ecobee Runtime Report API
+  tags:
+  - Reports
+  - Runtime
+  - History
+  - Analytics
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.ecobee.com/home/developer/api/documentation/v1/operations/get-runtime-report.shtml
+  baseURL: https://api.ecobee.com/1
+  properties:
+  - url: https://www.ecobee.com/home/developer/api/documentation/v1/operations/get-runtime-report.shtml
+    type: APIReference
+  - url: openapi/ecobee-openapi.yml
+    type: OpenAPI
+  - url: collections/ecobee.postman_collection.json
+    type: PostmanCollection
+  - url: collections/ecobee.opencollection.json
+    type: OpenCollection
+  description: Pull historical five-minute-interval runtime data for a set of thermostats
+    via GET /runtimeReport - temperature, humidity, setpoints, equipment run time, and
+    optional sensor columns. Limited to 25 thermostats and a 31-day window per request.
+- aid: ecobee:ecobee-group-api
+  name: ecobee Group API
+  tags:
+  - Groups
+  - Thermostats
+  - Configuration
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.ecobee.com/home/developer/api/documentation/v1/operations/get-group.shtml
+  baseURL: https://api.ecobee.com/1
+  properties:
+  - url: https://www.ecobee.com/home/developer/api/documentation/v1/operations/get-group.shtml
+    type: APIReference
+  - url: openapi/ecobee-openapi.yml
+    type: OpenAPI
+  - url: collections/ecobee.postman_collection.json
+    type: PostmanCollection
+  - url: collections/ecobee.opencollection.json
+    type: OpenCollection
+  description: Retrieve (GET /group) and update (POST /group) the grouping data for the
+    thermostats registered to a user, letting a Smart-account application organize
+    thermostats into named groups with shared settings.
+- aid: ecobee:ecobee-demand-response-api
+  name: ecobee Demand Response API
+  tags:
+  - Demand Response
+  - Utility
+  - Energy
+  - EMS
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.ecobee.com/home/developer/api/documentation/v1/operations/post-issue-demand-response.shtml
+  baseURL: https://api.ecobee.com/1
+  properties:
+  - url: https://www.ecobee.com/home/developer/api/documentation/v1/operations/post-issue-demand-response.shtml
+    type: APIReference
+  - url: openapi/ecobee-openapi.yml
+    type: OpenAPI
+  - url: collections/ecobee.postman_collection.json
+    type: PostmanCollection
+  - url: collections/ecobee.opencollection.json
+    type: OpenCollection
+  description: Issue, list, and cancel Demand Response events against a set of thermostats
+    via /demandResponse, temporarily adjusting programs during utility peak-load events.
+    Accessible to Utility accounts only.
+- aid: ecobee:ecobee-hierarchy-api
+  name: ecobee Hierarchy API
+  tags:
+  - Hierarchy
+  - Management Sets
+  - EMS
+  - Provisioning
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.ecobee.com/home/developer/api/documentation/v1/operations/hierarchy/getting-started-management-set-hierarchy.shtml
+  baseURL: https://api.ecobee.com/1
+  properties:
+  - url: https://www.ecobee.com/home/developer/api/documentation/v1/operations/hierarchy/getting-started-management-set-hierarchy.shtml
+    type: Documentation
+  - url: https://www.ecobee.com/home/developer/api/documentation/v1/operations/hierarchy/post-register-thermostat.shtml
+    type: APIReference
+  - url: openapi/ecobee-openapi.yml
+    type: OpenAPI
+  - url: collections/ecobee.postman_collection.json
+    type: PostmanCollection
+  - url: collections/ecobee.opencollection.json
+    type: OpenCollection
+  description: Organize EMS and Utility fleets in a management-set hierarchy - register,
+    unregister, move, and assign thermostats (/hierarchy/thermostat); create, list,
+    rename, remove, and move management sets (/hierarchy/set); and add, list, update,
+    unregister, and remove users (/hierarchy/user). EMS and Utility accounts only.
+- aid: ecobee:ecobee-meter-report-api
+  name: ecobee Meter Report API
+  tags:
+  - Reports
+  - Metering
+  - Energy
+  - EMS
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.ecobee.com/home/developer/api/documentation/v1/operations/operations-intro.shtml
+  baseURL: https://api.ecobee.com/1
+  properties:
+  - url: https://www.ecobee.com/home/developer/api/documentation/v1/operations/operations-intro.shtml
+    type: Documentation
+  - url: openapi/ecobee-openapi.yml
+    type: OpenAPI
+  - url: collections/ecobee.postman_collection.json
+    type: PostmanCollection
+  - url: collections/ecobee.opencollection.json
+    type: OpenCollection
+  description: Retrieve meter reading history (energy / metering data) for a set of
+    thermostats via GET /meterReport, over a bounded date range. Available to EMS and
+    Utility accounts.
+- aid: ecobee:ecobee-authorization-api
+  name: ecobee Authorization API
+  tags:
+  - OAuth
+  - Authorization
+  - PIN
+  - Tokens
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.ecobee.com/home/developer/api/documentation/v1/auth/auth-intro.shtml
+  baseURL: https://api.ecobee.com
+  properties:
+  - url: https://www.ecobee.com/home/developer/api/documentation/v1/auth/auth-intro.shtml
+    type: Documentation
+  - url: https://www.ecobee.com/home/developer/api/documentation/v1/auth/pin-api-authorization.shtml
+    type: APIReference
+  - url: https://www.ecobee.com/home/developer/api/documentation/v1/auth/token-refresh.shtml
+    type: Authentication
+  - url: openapi/ecobee-openapi.yml
+    type: OpenAPI
+  - url: collections/ecobee.postman_collection.json
+    type: PostmanCollection
+  - url: collections/ecobee.opencollection.json
+    type: OpenCollection
+  description: OAuth 2.0 authorization for the ecobee API. GET /authorize starts the
+    ecobee PIN flow (response_type=ecobeePin) or the authorization-code flow; POST /token
+    exchanges an authorization code (grant_type=ecobeePin or authorization_code) for an
+    access and refresh token and refreshes expired access tokens (grant_type=refresh_token).
+    Scopes are smartRead, smartWrite, and ems. Note - the developer program is closed to
+    new app-key registrations.
+common:
+- type: GitHubOrganization
+  url: https://github.com/ecobee
+- type: LinkedIn
+  url: https://www.linkedin.com/company/ecobee
+- type: Website
+  url: https://www.ecobee.com
+- type: Documentation
+  url: https://www.ecobee.com/home/developer/api/introduction/index.shtml
+- type: Plans
+  url: plans/ecobee-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/ecobee-rate-limits.yml
+- type: FinOps
+  url: finops/ecobee-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

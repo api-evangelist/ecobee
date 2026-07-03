@@ -1,0 +1,197 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "ecobee API",
+    "version": "1.0",
+    "description": "REST-like JSON API for reading and controlling registered ecobee smart thermostats. Data plane base URL: https://api.ecobee.com/1 (Bearer access token). OAuth authorize/token endpoints are on the host root https://api.ecobee.com. NOTE: ecobee closed its developer program to new API-key registrations in late 2024; existing keys still function."
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{accessToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": { "name": "Thermostat", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get thermostats.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/1/thermostat?json={\"selection\":{\"selectionType\":\"registered\",\"selectionMatch\":\"\",\"includeRuntime\":true,\"includeSettings\":true}}"
+          },
+          "docs": "Retrieves registered thermostats and their requested data (runtime, settings, events, sensors)."
+        },
+        {
+          "info": { "name": "Get thermostat summary.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/1/thermostatSummary?json={\"selection\":{\"selectionType\":\"registered\",\"selectionMatch\":\"\",\"includeEquipmentStatus\":true}}"
+          },
+          "docs": "Compact revision-list summary to detect changes without re-fetching full objects. Poll at most once every three minutes."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Thermostat Update", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Update thermostat and run functions.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.ecobee.com/1/thermostat?format=json",
+            "body": { "type": "json", "data": "{\n  \"selection\": {\n    \"selectionType\": \"thermostats\",\n    \"selectionMatch\": \"THERMOSTAT_ID\"\n  },\n  \"functions\": [\n    { \"type\": \"setHold\", \"params\": { \"holdType\": \"nextTransition\", \"heatHoldTemp\": 700, \"coolHoldTemp\": 750 } }\n  ]\n}" }
+          },
+          "docs": "Updates writable thermostat properties and/or runs thermostat functions. Requires smartWrite scope."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Reports", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get runtime report.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/1/runtimeReport?format=json&body={\"startDate\":\"2026-06-01\",\"endDate\":\"2026-06-07\",\"columns\":\"zoneAveTemp,compHeat1,compCool1\",\"selection\":{\"selectionType\":\"thermostats\",\"selectionMatch\":\"THERMOSTAT_ID\"}}"
+          },
+          "docs": "Historical five-minute-interval runtime data. Limited to 25 thermostats and a 31-day period per request."
+        },
+        {
+          "info": { "name": "Get meter report.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/1/meterReport?format=json&body={\"startDate\":\"2026-06-01\",\"endDate\":\"2026-06-07\",\"selection\":{\"selectionType\":\"thermostats\",\"selectionMatch\":\"THERMOSTAT_ID\"}}"
+          },
+          "docs": "Meter reading history for a set of thermostats. EMS and Utility accounts only."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Group", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get groups.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/1/group?json={\"selection\":{\"selectionType\":\"registered\",\"selectionMatch\":\"\"}}"
+          },
+          "docs": "Retrieves the group and grouping data for the user's thermostats. Smart accounts only."
+        },
+        {
+          "info": { "name": "Update groups.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.ecobee.com/1/group?format=json",
+            "body": { "type": "json", "data": "{\n  \"selection\": { \"selectionType\": \"registered\", \"selectionMatch\": \"\" },\n  \"groups\": [ { \"groupName\": \"Upstairs\", \"thermostats\": [\"THERMOSTAT_ID\"], \"synchronizeVacation\": true } ]\n}" }
+          },
+          "docs": "Creates or updates the grouping of the user's thermostats. Smart accounts only."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Demand Response", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List demand responses.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/1/demandResponse?json={\"selection\":{\"selectionType\":\"managementSet\",\"selectionMatch\":\"/\"}}"
+          },
+          "docs": "Lists demand response events. Utility accounts only."
+        },
+        {
+          "info": { "name": "Issue demand response.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.ecobee.com/1/demandResponse?format=json",
+            "body": { "type": "json", "data": "{\n  \"selection\": { \"selectionType\": \"thermostats\", \"selectionMatch\": \"THERMOSTAT_ID\" },\n  \"demandResponse\": { \"name\": \"Peak Event\", \"message\": \"Utility peak load event\", \"event\": { \"startDate\": \"2026-07-15\", \"startTime\": \"16:00:00\", \"endDate\": \"2026-07-15\", \"endTime\": \"19:00:00\" } }\n}" }
+          },
+          "docs": "Issues a demand response event to a set of thermostats. Utility accounts only. Send a cancel body to cancel an event."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Hierarchy", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Register / move / assign thermostats.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.ecobee.com/1/hierarchy/thermostat?format=json",
+            "body": { "type": "json", "data": "{\n  \"operation\": \"register\",\n  \"setPath\": \"/Location 1/Group 1\",\n  \"thermostats\": \"THERMOSTAT_ID\"\n}" }
+          },
+          "docs": "Registers, unregisters, moves, or assigns thermostats in the management-set hierarchy. EMS and Utility accounts only."
+        },
+        {
+          "info": { "name": "List management sets.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/1/hierarchy/set?json={\"operation\":\"list\"}"
+          },
+          "docs": "Lists the management sets in the account hierarchy. EMS and Utility accounts only."
+        },
+        {
+          "info": { "name": "Add / rename / move set.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.ecobee.com/1/hierarchy/set?format=json",
+            "body": { "type": "json", "data": "{\n  \"operation\": \"add\",\n  \"setName\": \"Group 1\",\n  \"parentPath\": \"/Location 1\"\n}" }
+          },
+          "docs": "Adds, removes, renames, or moves a management set. EMS and Utility accounts only."
+        },
+        {
+          "info": { "name": "List users.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/1/hierarchy/user?json={\"operation\":\"list\"}"
+          },
+          "docs": "Lists the users in the account hierarchy. EMS and Utility accounts only."
+        },
+        {
+          "info": { "name": "Add / update / remove user.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.ecobee.com/1/hierarchy/user?format=json",
+            "body": { "type": "json", "data": "{\n  \"operation\": \"add\",\n  \"userName\": \"user@example.com\",\n  \"setPath\": \"/Location 1\",\n  \"privileges\": [\"hierarchy\"]\n}" }
+          },
+          "docs": "Adds, updates, removes, or unregisters a user in the hierarchy. EMS and Utility accounts only."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Authorization", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Authorize (ecobee PIN).", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/authorize?response_type=ecobeePin&client_id={{clientId}}&scope=smartWrite",
+            "auth": { "type": "none" }
+          },
+          "docs": "Starts the ecobee PIN flow; returns a PIN, an authorization code, and expiry. The user enters the PIN in the ecobee web portal."
+        },
+        {
+          "info": { "name": "Token (exchange PIN code).", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.ecobee.com/token?grant_type=ecobeePin&code=AUTH_CODE&client_id={{clientId}}",
+            "auth": { "type": "none" }
+          },
+          "docs": "Exchanges the authorization code for an access token and refresh token."
+        },
+        {
+          "info": { "name": "Token (refresh).", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.ecobee.com/token?grant_type=refresh_token&refresh_token={{refreshToken}}&client_id={{clientId}}",
+            "auth": { "type": "none" }
+          },
+          "docs": "Refreshes an expired access token using the refresh token."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
