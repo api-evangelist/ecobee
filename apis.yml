@@ -216,6 +216,10 @@ apis:
     Scopes are smartRead, smartWrite, and ems. Note - the developer program is closed to
     new app-key registrations.
 common:
+- type: DomainSecurity
+  url: security/ecobee-domain-security.yml
+- type: Authentication
+  url: authentication/ecobee-authentication.yml
 - type: GitHubOrganization
   url: https://github.com/ecobee
 - type: LinkedIn
