@@ -216,6 +216,8 @@ apis:
     Scopes are smartRead, smartWrite, and ems. Note - the developer program is closed to
     new app-key registrations.
 common:
+- type: AgenticAccess
+  url: agentic-access/ecobee-agentic-access.yml
 - type: DomainSecurity
   url: security/ecobee-domain-security.yml
 - type: Authentication
