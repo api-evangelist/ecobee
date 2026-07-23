@@ -1,0 +1,169 @@
+openapi: 3.0.3
+info:
+  title: ecobee Authorization Group API
+  description: 'The ecobee API is a REST-like JSON interface for reading and controlling registered ecobee smart thermostats and connected home devices. The data plane is based at https://api.ecobee.com/1 and returns/accepts JSON. Read thermostat runtime, settings, sensors, and equipment status with GET /thermostat, poll for change efficiently with GET /thermostatSummary, and apply writable properties and thermostat functions with POST /thermostat. Historical data is available via GET /runtimeReport and GET /meterReport. Thermostats can be grouped (/group) and, for EMS and Utility accounts, organized in a management-set hierarchy (/hierarchy/*) and driven with demand response events (/demandResponse).
+
+    Authorization uses OAuth 2.0 with an ecobee PIN flow or the standard authorization-code flow, plus refresh tokens; the OAuth endpoints (/authorize and /token) live on the host root https://api.ecobee.com (without the /1 path). All data-plane requests require an `Authorization: Bearer ACCESS_TOKEN` header.
+
+    NOTE - as of late 2024, ecobee closed its developer program to new API-key registrations; existing keys continue to function. Endpoint shapes below are grounded in ecobee''s published v1 API documentation; request/response schemas are simplified models of the documented objects.'
+  version: '1.0'
+  contact:
+    name: ecobee Developer
+    url: https://www.ecobee.com/home/developer/api/introduction/index.shtml
+servers:
+- url: https://api.ecobee.com/1
+  description: ecobee API data plane (v1)
+- url: https://api.ecobee.com
+  description: ecobee OAuth 2.0 authorization host (authorize / token)
+security:
+- bearerAuth: []
+tags:
+- name: Group
+  description: Group registered thermostats.
+paths:
+  /group:
+    get:
+      operationId: getGroups
+      tags:
+      - Group
+      summary: Get groups
+      description: Retrieves the Group and grouping data for the thermostats registered to the user. Accessible by Smart accounts only.
+      parameters:
+      - name: json
+        in: query
+        required: true
+        description: URL-encoded JSON request containing a `selection` object.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The groups registered to the user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: updateGroups
+      tags:
+      - Group
+      summary: Update groups
+      description: Creates or updates the grouping of the user's thermostats. Accessible by Smart accounts only.
+      parameters:
+      - name: format
+        in: query
+        required: true
+        description: Response format. Always `json`.
+        schema:
+          type: string
+          default: json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupRequest'
+      responses:
+        '200':
+          description: A Status object and the updated groups.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    Selection:
+      type: object
+      description: Determines which thermostats and which sub-objects are returned or acted upon.
+      required:
+      - selectionType
+      properties:
+        selectionType:
+          type: string
+          enum:
+          - registered
+          - thermostats
+          - managementSet
+          description: How to interpret selectionMatch.
+        selectionMatch:
+          type: string
+          description: Comma-separated thermostat identifiers, a management set path, or an empty string for all registered thermostats.
+        includeRuntime:
+          type: boolean
+        includeSettings:
+          type: boolean
+        includeEvents:
+          type: boolean
+        includeSensors:
+          type: boolean
+        includeEquipmentStatus:
+          type: boolean
+        includeAlerts:
+          type: boolean
+        includeProgram:
+          type: boolean
+    GroupResponse:
+      type: object
+      properties:
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+        status:
+          $ref: '#/components/schemas/Status'
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+    GroupRequest:
+      type: object
+      required:
+      - selection
+      - groups
+      properties:
+        selection:
+          $ref: '#/components/schemas/Selection'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+    Group:
+      type: object
+      properties:
+        groupRef:
+          type: string
+        groupName:
+          type: string
+        thermostats:
+          type: array
+          items:
+            type: string
+        synchronizeSystemMode:
+          type: boolean
+        synchronizeVacation:
+          type: boolean
+    Status:
+      type: object
+      description: Standard ecobee response status.
+      properties:
+        code:
+          type: integer
+          description: The status code (0 indicates success).
+        message:
+          type: string
+  responses:
+    Unauthorized:
+      description: Missing, invalid, or expired access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StatusResponse'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'OAuth 2.0 access token passed as `Authorization: Bearer ACCESS_TOKEN` on all data-plane requests to https://api.ecobee.com/1.'

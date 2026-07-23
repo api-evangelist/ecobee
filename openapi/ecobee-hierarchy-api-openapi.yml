@@ -1,0 +1,240 @@
+openapi: 3.0.3
+info:
+  title: ecobee Authorization Hierarchy API
+  description: 'The ecobee API is a REST-like JSON interface for reading and controlling registered ecobee smart thermostats and connected home devices. The data plane is based at https://api.ecobee.com/1 and returns/accepts JSON. Read thermostat runtime, settings, sensors, and equipment status with GET /thermostat, poll for change efficiently with GET /thermostatSummary, and apply writable properties and thermostat functions with POST /thermostat. Historical data is available via GET /runtimeReport and GET /meterReport. Thermostats can be grouped (/group) and, for EMS and Utility accounts, organized in a management-set hierarchy (/hierarchy/*) and driven with demand response events (/demandResponse).
+
+    Authorization uses OAuth 2.0 with an ecobee PIN flow or the standard authorization-code flow, plus refresh tokens; the OAuth endpoints (/authorize and /token) live on the host root https://api.ecobee.com (without the /1 path). All data-plane requests require an `Authorization: Bearer ACCESS_TOKEN` header.
+
+    NOTE - as of late 2024, ecobee closed its developer program to new API-key registrations; existing keys continue to function. Endpoint shapes below are grounded in ecobee''s published v1 API documentation; request/response schemas are simplified models of the documented objects.'
+  version: '1.0'
+  contact:
+    name: ecobee Developer
+    url: https://www.ecobee.com/home/developer/api/introduction/index.shtml
+servers:
+- url: https://api.ecobee.com/1
+  description: ecobee API data plane (v1)
+- url: https://api.ecobee.com
+  description: ecobee OAuth 2.0 authorization host (authorize / token)
+security:
+- bearerAuth: []
+tags:
+- name: Hierarchy
+  description: EMS/Utility management-set hierarchy of thermostats, sets, and users.
+paths:
+  /hierarchy/thermostat:
+    post:
+      operationId: hierarchyThermostat
+      tags:
+      - Hierarchy
+      summary: Register, unregister, move, or assign thermostats
+      description: Registers one or more thermostats with the hierarchy and optionally assigns them to a management set, or unregisters, moves, or assigns existing thermostats. The `operation` field selects the action. Accessible by EMS and Utility accounts only.
+      parameters:
+      - name: format
+        in: query
+        required: true
+        description: Response format. Always `json`.
+        schema:
+          type: string
+          default: json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HierarchyThermostatRequest'
+      responses:
+        '200':
+          description: A Status object indicating success or failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /hierarchy/set:
+    get:
+      operationId: listHierarchySets
+      tags:
+      - Hierarchy
+      summary: List management sets
+      description: Lists the management sets in the account hierarchy. Accessible by EMS and Utility accounts only.
+      parameters:
+      - name: json
+        in: query
+        required: true
+        description: URL-encoded JSON request containing the set query.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The management sets.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: manageHierarchySet
+      tags:
+      - Hierarchy
+      summary: Add, remove, rename, or move a management set
+      description: Adds, removes, renames, or moves a management set. The `operation` field selects the action. Accessible by EMS and Utility accounts only.
+      parameters:
+      - name: format
+        in: query
+        required: true
+        description: Response format. Always `json`.
+        schema:
+          type: string
+          default: json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HierarchySetRequest'
+      responses:
+        '200':
+          description: A Status object indicating success or failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /hierarchy/user:
+    get:
+      operationId: listHierarchyUsers
+      tags:
+      - Hierarchy
+      summary: List hierarchy users
+      description: Lists the users in the account hierarchy. Accessible by EMS and Utility accounts only.
+      parameters:
+      - name: json
+        in: query
+        required: true
+        description: URL-encoded JSON request containing the user query.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The hierarchy users.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: manageHierarchyUser
+      tags:
+      - Hierarchy
+      summary: Add, update, remove, or unregister a hierarchy user
+      description: Adds, updates, removes, or unregisters a user in the hierarchy. The `operation` field selects the action. Accessible by EMS and Utility accounts only.
+      parameters:
+      - name: format
+        in: query
+        required: true
+        description: Response format. Always `json`.
+        schema:
+          type: string
+          default: json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HierarchyUserRequest'
+      responses:
+        '200':
+          description: A Status object indicating success or failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    HierarchyThermostatRequest:
+      type: object
+      required:
+      - operation
+      properties:
+        operation:
+          type: string
+          enum:
+          - register
+          - unregister
+          - move
+          - assign
+        setPath:
+          type: string
+        thermostats:
+          type: string
+          description: Comma-separated thermostat identifiers.
+    HierarchySetRequest:
+      type: object
+      required:
+      - operation
+      properties:
+        operation:
+          type: string
+          enum:
+          - add
+          - remove
+          - rename
+          - move
+        setPath:
+          type: string
+        setName:
+          type: string
+        parentPath:
+          type: string
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+    HierarchyUserRequest:
+      type: object
+      required:
+      - operation
+      properties:
+        operation:
+          type: string
+          enum:
+          - add
+          - update
+          - remove
+          - unregister
+        userName:
+          type: string
+        setPath:
+          type: string
+        privileges:
+          type: array
+          items:
+            type: string
+    Status:
+      type: object
+      description: Standard ecobee response status.
+      properties:
+        code:
+          type: integer
+          description: The status code (0 indicates success).
+        message:
+          type: string
+  responses:
+    Unauthorized:
+      description: Missing, invalid, or expired access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StatusResponse'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'OAuth 2.0 access token passed as `Authorization: Bearer ACCESS_TOKEN` on all data-plane requests to https://api.ecobee.com/1.'

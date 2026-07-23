@@ -1,0 +1,147 @@
+openapi: 3.0.3
+info:
+  title: ecobee Authorization Demand Response API
+  description: 'The ecobee API is a REST-like JSON interface for reading and controlling registered ecobee smart thermostats and connected home devices. The data plane is based at https://api.ecobee.com/1 and returns/accepts JSON. Read thermostat runtime, settings, sensors, and equipment status with GET /thermostat, poll for change efficiently with GET /thermostatSummary, and apply writable properties and thermostat functions with POST /thermostat. Historical data is available via GET /runtimeReport and GET /meterReport. Thermostats can be grouped (/group) and, for EMS and Utility accounts, organized in a management-set hierarchy (/hierarchy/*) and driven with demand response events (/demandResponse).
+
+    Authorization uses OAuth 2.0 with an ecobee PIN flow or the standard authorization-code flow, plus refresh tokens; the OAuth endpoints (/authorize and /token) live on the host root https://api.ecobee.com (without the /1 path). All data-plane requests require an `Authorization: Bearer ACCESS_TOKEN` header.
+
+    NOTE - as of late 2024, ecobee closed its developer program to new API-key registrations; existing keys continue to function. Endpoint shapes below are grounded in ecobee''s published v1 API documentation; request/response schemas are simplified models of the documented objects.'
+  version: '1.0'
+  contact:
+    name: ecobee Developer
+    url: https://www.ecobee.com/home/developer/api/introduction/index.shtml
+servers:
+- url: https://api.ecobee.com/1
+  description: ecobee API data plane (v1)
+- url: https://api.ecobee.com
+  description: ecobee OAuth 2.0 authorization host (authorize / token)
+security:
+- bearerAuth: []
+tags:
+- name: Demand Response
+  description: Utility demand response events.
+paths:
+  /demandResponse:
+    get:
+      operationId: listDemandResponses
+      tags:
+      - Demand Response
+      summary: List demand responses
+      description: Lists the Demand Response events. Accessible by Utility accounts only.
+      parameters:
+      - name: json
+        in: query
+        required: true
+        description: URL-encoded JSON request containing the query selection.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The list of demand response events.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: issueDemandResponse
+      tags:
+      - Demand Response
+      summary: Issue or cancel a demand response
+      description: Issues a Demand Response event to a set of thermostats to adjust their program, or cancels a previously issued event (via a cancel demand response request body). Accessible by Utility accounts only.
+      parameters:
+      - name: format
+        in: query
+        required: true
+        description: Response format. Always `json`.
+        schema:
+          type: string
+          default: json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DemandResponseRequest'
+      responses:
+        '200':
+          description: A Status object with the demand response reference.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    Selection:
+      type: object
+      description: Determines which thermostats and which sub-objects are returned or acted upon.
+      required:
+      - selectionType
+      properties:
+        selectionType:
+          type: string
+          enum:
+          - registered
+          - thermostats
+          - managementSet
+          description: How to interpret selectionMatch.
+        selectionMatch:
+          type: string
+          description: Comma-separated thermostat identifiers, a management set path, or an empty string for all registered thermostats.
+        includeRuntime:
+          type: boolean
+        includeSettings:
+          type: boolean
+        includeEvents:
+          type: boolean
+        includeSensors:
+          type: boolean
+        includeEquipmentStatus:
+          type: boolean
+        includeAlerts:
+          type: boolean
+        includeProgram:
+          type: boolean
+    DemandResponseRequest:
+      type: object
+      required:
+      - selection
+      properties:
+        selection:
+          $ref: '#/components/schemas/Selection'
+        demandResponse:
+          type: object
+          description: The demand response event definition (name, message, event window, and adjustments).
+          additionalProperties: true
+        demandResponseRef:
+          type: string
+          description: Reference to a demand response to cancel.
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+    Status:
+      type: object
+      description: Standard ecobee response status.
+      properties:
+        code:
+          type: integer
+          description: The status code (0 indicates success).
+        message:
+          type: string
+  responses:
+    Unauthorized:
+      description: Missing, invalid, or expired access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StatusResponse'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'OAuth 2.0 access token passed as `Authorization: Bearer ACCESS_TOKEN` on all data-plane requests to https://api.ecobee.com/1.'

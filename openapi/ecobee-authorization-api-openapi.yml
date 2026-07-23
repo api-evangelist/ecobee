@@ -1,0 +1,195 @@
+openapi: 3.0.3
+info:
+  title: ecobee Authorization API
+  description: 'The ecobee API is a REST-like JSON interface for reading and controlling registered ecobee smart thermostats and connected home devices. The data plane is based at https://api.ecobee.com/1 and returns/accepts JSON. Read thermostat runtime, settings, sensors, and equipment status with GET /thermostat, poll for change efficiently with GET /thermostatSummary, and apply writable properties and thermostat functions with POST /thermostat. Historical data is available via GET /runtimeReport and GET /meterReport. Thermostats can be grouped (/group) and, for EMS and Utility accounts, organized in a management-set hierarchy (/hierarchy/*) and driven with demand response events (/demandResponse).
+
+    Authorization uses OAuth 2.0 with an ecobee PIN flow or the standard authorization-code flow, plus refresh tokens; the OAuth endpoints (/authorize and /token) live on the host root https://api.ecobee.com (without the /1 path). All data-plane requests require an `Authorization: Bearer ACCESS_TOKEN` header.
+
+    NOTE - as of late 2024, ecobee closed its developer program to new API-key registrations; existing keys continue to function. Endpoint shapes below are grounded in ecobee''s published v1 API documentation; request/response schemas are simplified models of the documented objects.'
+  version: '1.0'
+  contact:
+    name: ecobee Developer
+    url: https://www.ecobee.com/home/developer/api/introduction/index.shtml
+servers:
+- url: https://api.ecobee.com/1
+  description: ecobee API data plane (v1)
+- url: https://api.ecobee.com
+  description: ecobee OAuth 2.0 authorization host (authorize / token)
+security:
+- bearerAuth: []
+tags:
+- name: Authorization
+  description: OAuth 2.0 PIN and authorization-code flows and token refresh.
+paths:
+  /authorize:
+    servers:
+    - url: https://api.ecobee.com
+      description: ecobee OAuth 2.0 authorization host
+    get:
+      operationId: authorize
+      tags:
+      - Authorization
+      summary: Begin authorization (PIN or authorization code)
+      description: Starts an authorization flow. For the ecobee PIN flow, set `response_type=ecobeePin`; the response returns a PIN, an authorization `code`, and expiry, which the user enters in the ecobee web portal to grant access. For the authorization-code flow, set `response_type=code` with a `redirect_uri`. This endpoint is on the host root, not under /1.
+      security: []
+      parameters:
+      - name: response_type
+        in: query
+        required: true
+        description: '`ecobeePin` for the PIN flow, or `code` for the authorization-code flow.'
+        schema:
+          type: string
+          enum:
+          - ecobeePin
+          - code
+      - name: client_id
+        in: query
+        required: true
+        description: The application key (API key) for your application.
+        schema:
+          type: string
+      - name: scope
+        in: query
+        required: true
+        description: The requested scope.
+        schema:
+          type: string
+          enum:
+          - smartRead
+          - smartWrite
+          - ems
+      - name: redirect_uri
+        in: query
+        required: false
+        description: Redirect URI for the authorization-code flow.
+        schema:
+          type: string
+      - name: state
+        in: query
+        required: false
+        description: Opaque value echoed back for the authorization-code flow.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: PIN, authorization code, and expiry (PIN flow).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PinResponse'
+  /token:
+    servers:
+    - url: https://api.ecobee.com
+      description: ecobee OAuth 2.0 authorization host
+    post:
+      operationId: token
+      tags:
+      - Authorization
+      summary: Exchange or refresh tokens
+      description: Exchanges an authorization code for an access token and refresh token (`grant_type=ecobeePin` or `authorization_code`), or refreshes an expired access token (`grant_type=refresh_token`). Parameters are passed as query string. This endpoint is on the host root, not under /1.
+      security: []
+      parameters:
+      - name: grant_type
+        in: query
+        required: true
+        description: The OAuth grant type.
+        schema:
+          type: string
+          enum:
+          - ecobeePin
+          - authorization_code
+          - refresh_token
+      - name: code
+        in: query
+        required: false
+        description: The authorization code (for ecobeePin / authorization_code grants).
+        schema:
+          type: string
+      - name: refresh_token
+        in: query
+        required: false
+        description: The refresh token (for the refresh_token grant).
+        schema:
+          type: string
+      - name: client_id
+        in: query
+        required: true
+        description: The application key (API key) for your application.
+        schema:
+          type: string
+      - name: redirect_uri
+        in: query
+        required: false
+        description: Redirect URI (for the authorization_code grant).
+        schema:
+          type: string
+      - name: ecobee_type
+        in: query
+        required: false
+        description: Set to `jwt` to have the API return access tokens as JWTs.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: An access token, refresh token, scope, and expiry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          $ref: '#/components/responses/ApiError'
+components:
+  schemas:
+    PinResponse:
+      type: object
+      properties:
+        ecobeePin:
+          type: string
+        code:
+          type: string
+          description: The authorization code to exchange at /token.
+        scope:
+          type: string
+        expires_in:
+          type: integer
+        interval:
+          type: integer
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+        expires_in:
+          type: integer
+        refresh_token:
+          type: string
+        scope:
+          type: string
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+    Status:
+      type: object
+      description: Standard ecobee response status.
+      properties:
+        code:
+          type: integer
+          description: The status code (0 indicates success).
+        message:
+          type: string
+  responses:
+    ApiError:
+      description: An API error, described by a Status object.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StatusResponse'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'OAuth 2.0 access token passed as `Authorization: Bearer ACCESS_TOKEN` on all data-plane requests to https://api.ecobee.com/1.'
