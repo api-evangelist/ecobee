@@ -1,0 +1,26 @@
+{
+  "provider": "ecobee",
+  "sources": [
+    "ecobee-authorization-api-openapi.yml",
+    "ecobee-demand-response-api-openapi.yml",
+    "ecobee-group-api-openapi.yml",
+    "ecobee-hierarchy-api-openapi.yml",
+    "ecobee-reports-api-openapi.yml",
+    "ecobee-thermostat-api-openapi.yml",
+    "ecobee-thermostat-update-api-openapi.yml"
+  ],
+  "outputs": [
+    "ecobee-authorization-api-openapi.yml",
+    "ecobee-demand-response-api-openapi.yml",
+    "ecobee-group-api-openapi.yml",
+    "ecobee-hierarchy-api-openapi.yml",
+    "ecobee-reports-api-openapi.yml",
+    "ecobee-thermostat-api-openapi.yml",
+    "ecobee-thermostat-update-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
