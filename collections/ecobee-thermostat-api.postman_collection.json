@@ -1,0 +1,317 @@
+{
+  "item": [
+    {
+      "id": "80ccf2f0-ca27-4cd9-8095-8c0ae446ec9b",
+      "name": "Thermostat",
+      "description": {
+        "content": "Read thermostat state and poll for changes.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "a92b05be-2cea-495e-aab4-81c29afb79ca",
+          "name": "Get thermostats",
+          "request": {
+            "name": "Get thermostats",
+            "description": {
+              "content": "Retrieves a selection of registered thermostats and their requested data (runtime, settings, program, events, alerts, sensors, and more). The Selection object in the `json` query parameter determines which thermostats and which sub-objects are returned.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "thermostat"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "json",
+                  "value": "<string>",
+                  "description": "(Required) URL-encoded JSON request containing a `selection` object (and optional `page`) that determines the thermostats and data returned."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1e837788-2962-426e-976f-4b57dcc30831",
+              "name": "The matching thermostats and requested data.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "thermostat"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "json",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"page\": {\n    \"page\": 5694,\n    \"totalPages\": 3565,\n    \"pageSize\": 2413,\n    \"total\": 6398\n  },\n  \"thermostatList\": [\n    {\n      \"identifier\": \"string\",\n      \"name\": \"string\",\n      \"thermostatRev\": \"string\",\n      \"isRegistered\": true,\n      \"modelNumber\": \"string\",\n      \"brand\": \"string\",\n      \"runtime\": {\n        \"key_0\": false\n      },\n      \"settings\": {\n        \"key_0\": 4103.497917255483,\n        \"key_1\": 5532.547353342922,\n        \"key_2\": 2844\n      },\n      \"events\": [\n        {\n          \"key_0\": true,\n          \"key_1\": \"string\",\n          \"key_2\": \"string\",\n          \"key_3\": false\n        },\n        {\n          \"key_0\": 8919,\n          \"key_1\": 9813\n        }\n      ],\n      \"remoteSensors\": [\n        {\n          \"key_0\": 7392,\n          \"key_1\": true,\n          \"key_2\": true\n        },\n        {\n          \"key_0\": 9223,\n          \"key_1\": 2810,\n          \"key_2\": 4338\n        }\n      ]\n    },\n    {\n      \"identifier\": \"string\",\n      \"name\": \"string\",\n      \"thermostatRev\": \"string\",\n      \"isRegistered\": true,\n      \"modelNumber\": \"string\",\n      \"brand\": \"string\",\n      \"runtime\": {\n        \"key_0\": true,\n        \"key_1\": \"string\",\n        \"key_2\": \"string\",\n        \"key_3\": 8403.762565811829\n      },\n      \"settings\": {\n        \"key_0\": 3292.780889300031,\n        \"key_1\": 8589\n      },\n      \"events\": [\n        {\n          \"key_0\": false\n        },\n        {\n          \"key_0\": \"string\"\n        }\n      ],\n      \"remoteSensors\": [\n        {\n          \"key_0\": 9977,\n          \"key_1\": true\n        },\n        {\n          \"key_0\": true,\n          \"key_1\": 415.5763366415788\n        }\n      ]\n    }\n  ],\n  \"status\": {\n    \"code\": 9915,\n    \"message\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9b62ccd9-47cc-4298-aa12-91fa450197f1",
+              "name": "Missing, invalid, or expired access token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "thermostat"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "json",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": {\n    \"code\": 2272,\n    \"message\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "36bea7bf-2af1-4bbd-9fd3-9d52a83a8983",
+          "name": "Get thermostat summary",
+          "request": {
+            "name": "Get thermostat summary",
+            "description": {
+              "content": "Returns a compact revision-list summary for the selected thermostats - thermostat id, name, connection status, and configuration/alert/runtime/ interval revision timestamps - so callers can detect changes without re-fetching full thermostat objects. Optionally includes equipment status. Poll no more frequently than once every three minutes.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "thermostatSummary"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "json",
+                  "value": "<string>",
+                  "description": "(Required) URL-encoded JSON request containing a `selection` object. Set `includeEquipmentStatus` to true to also receive equipment status."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "807b9783-21a3-43a4-9727-c16a49df26fa",
+              "name": "Revision list (and optional equipment status) for the selection.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "thermostatSummary"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "json",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"thermostatCount\": 6338,\n  \"revisionList\": [\n    \"string\",\n    \"string\"\n  ],\n  \"statusList\": [\n    \"string\",\n    \"string\"\n  ],\n  \"status\": {\n    \"code\": 7007,\n    \"message\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3780eb33-fbd5-4773-9572-45c9ff5fca0b",
+              "name": "Missing, invalid, or expired access token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "thermostatSummary"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "json",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": {\n    \"code\": 2272,\n    \"message\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.ecobee.com/1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "56c7813b-4035-465c-946a-5e04b54fe6dc",
+    "name": "ecobee Authorization Thermostat API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The ecobee API is a REST-like JSON interface for reading and controlling registered ecobee smart thermostats and connected home devices. The data plane is based at https://api.ecobee.com/1 and returns/accepts JSON. Read thermostat runtime, settings, sensors, and equipment status with GET /thermostat, poll for change efficiently with GET /thermostatSummary, and apply writable properties and thermostat functions with POST /thermostat. Historical data is available via GET /runtimeReport and GET /meterReport. Thermostats can be grouped (/group) and, for EMS and Utility accounts, organized in a management-set hierarchy (/hierarchy/*) and driven with demand response events (/demandResponse).\nAuthorization uses OAuth 2.0 with an ecobee PIN flow or the standard authorization-code flow, plus refresh tokens; the OAuth endpoints (/authorize and /token) live on the host root https://api.ecobee.com (without the /1 path). All data-plane requests require an `Authorization: Bearer ACCESS_TOKEN` header.\nNOTE - as of late 2024, ecobee closed its developer program to new API-key registrations; existing keys continue to function. Endpoint shapes below are grounded in ecobee's published v1 API documentation; request/response schemas are simplified models of the documented objects.\n\nContact Support:\n Name: ecobee Developer",
+      "type": "text/plain"
+    }
+  }
+}

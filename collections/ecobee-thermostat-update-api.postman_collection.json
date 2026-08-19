@@ -1,0 +1,264 @@
+{
+  "item": [
+    {
+      "id": "b98f0cbf-c4bf-476a-9959-2f4ade1a2813",
+      "name": "Thermostat Update",
+      "description": {
+        "content": "Update writable properties and run thermostat functions.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b10154a3-b9b0-4b2b-830d-d000396f1f54",
+          "name": "Update thermostats and run functions",
+          "request": {
+            "name": "Update thermostats and run functions",
+            "description": {
+              "content": "Updates writable thermostat properties and/or executes one or more thermostat functions against a selection of thermostats. Functions are applied in the order listed. Accessible by Smart and EMS accounts; requires the smartWrite scope.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "thermostat"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "format",
+                  "value": "json",
+                  "description": "(Required) Response format. Always `json`."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"selection\": {\n    \"selectionType\": \"<string>\",\n    \"selectionMatch\": \"<string>\",\n    \"includeRuntime\": \"<boolean>\",\n    \"includeSettings\": \"<boolean>\",\n    \"includeEvents\": \"<boolean>\",\n    \"includeSensors\": \"<boolean>\",\n    \"includeEquipmentStatus\": \"<boolean>\",\n    \"includeAlerts\": \"<boolean>\",\n    \"includeProgram\": \"<boolean>\"\n  },\n  \"thermostat\": {\n    \"identifier\": \"<string>\",\n    \"name\": \"<string>\",\n    \"thermostatRev\": \"<string>\",\n    \"isRegistered\": \"<boolean>\",\n    \"modelNumber\": \"<string>\",\n    \"brand\": \"<string>\",\n    \"runtime\": {\n      \"key_0\": 2593.039307303945\n    },\n    \"settings\": {\n      \"key_0\": 9504\n    },\n    \"events\": [\n      {\n        \"key_0\": 7911.794051916307\n      },\n      {\n        \"key_0\": 6117,\n        \"key_1\": false\n      }\n    ],\n    \"remoteSensors\": [\n      {\n        \"key_0\": 6873.149261386581,\n        \"key_1\": 8015.7802489440755,\n        \"key_2\": 4653.658749239985\n      },\n      {\n        \"key_0\": \"string\"\n      }\n    ]\n  },\n  \"functions\": [\n    {\n      \"type\": \"<string>\",\n      \"params\": {\n        \"key_0\": false,\n        \"key_1\": false,\n        \"key_2\": false,\n        \"key_3\": 3921\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"params\": {\n        \"key_0\": false\n      }\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "6421a4eb-1ece-4928-87e3-5fce074b16d0",
+              "name": "A Status object indicating success or failure.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "thermostat"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "json"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"selection\": {\n    \"selectionType\": \"<string>\",\n    \"selectionMatch\": \"<string>\",\n    \"includeRuntime\": \"<boolean>\",\n    \"includeSettings\": \"<boolean>\",\n    \"includeEvents\": \"<boolean>\",\n    \"includeSensors\": \"<boolean>\",\n    \"includeEquipmentStatus\": \"<boolean>\",\n    \"includeAlerts\": \"<boolean>\",\n    \"includeProgram\": \"<boolean>\"\n  },\n  \"thermostat\": {\n    \"identifier\": \"<string>\",\n    \"name\": \"<string>\",\n    \"thermostatRev\": \"<string>\",\n    \"isRegistered\": \"<boolean>\",\n    \"modelNumber\": \"<string>\",\n    \"brand\": \"<string>\",\n    \"runtime\": {\n      \"key_0\": 2137,\n      \"key_1\": \"string\",\n      \"key_2\": 9199.586602273213,\n      \"key_3\": false\n    },\n    \"settings\": {\n      \"key_0\": true,\n      \"key_1\": \"string\"\n    },\n    \"events\": [\n      {\n        \"key_0\": 1864\n      },\n      {\n        \"key_0\": 184.96124350734,\n        \"key_1\": 5093.471330075976\n      }\n    ],\n    \"remoteSensors\": [\n      {\n        \"key_0\": \"string\"\n      },\n      {\n        \"key_0\": false,\n        \"key_1\": 9283\n      }\n    ]\n  },\n  \"functions\": [\n    {\n      \"type\": \"<string>\",\n      \"params\": {\n        \"key_0\": 4026,\n        \"key_1\": true,\n        \"key_2\": 9440,\n        \"key_3\": true,\n        \"key_4\": 886\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"params\": {\n        \"key_0\": 3406.3055777229433\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": {\n    \"code\": 1992,\n    \"message\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f76bb460-c4f4-45f1-8928-6ac6674d8c4c",
+              "name": "Missing, invalid, or expired access token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "thermostat"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "json"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"selection\": {\n    \"selectionType\": \"<string>\",\n    \"selectionMatch\": \"<string>\",\n    \"includeRuntime\": \"<boolean>\",\n    \"includeSettings\": \"<boolean>\",\n    \"includeEvents\": \"<boolean>\",\n    \"includeSensors\": \"<boolean>\",\n    \"includeEquipmentStatus\": \"<boolean>\",\n    \"includeAlerts\": \"<boolean>\",\n    \"includeProgram\": \"<boolean>\"\n  },\n  \"thermostat\": {\n    \"identifier\": \"<string>\",\n    \"name\": \"<string>\",\n    \"thermostatRev\": \"<string>\",\n    \"isRegistered\": \"<boolean>\",\n    \"modelNumber\": \"<string>\",\n    \"brand\": \"<string>\",\n    \"runtime\": {\n      \"key_0\": 2137,\n      \"key_1\": \"string\",\n      \"key_2\": 9199.586602273213,\n      \"key_3\": false\n    },\n    \"settings\": {\n      \"key_0\": true,\n      \"key_1\": \"string\"\n    },\n    \"events\": [\n      {\n        \"key_0\": 1864\n      },\n      {\n        \"key_0\": 184.96124350734,\n        \"key_1\": 5093.471330075976\n      }\n    ],\n    \"remoteSensors\": [\n      {\n        \"key_0\": \"string\"\n      },\n      {\n        \"key_0\": false,\n        \"key_1\": 9283\n      }\n    ]\n  },\n  \"functions\": [\n    {\n      \"type\": \"<string>\",\n      \"params\": {\n        \"key_0\": 4026,\n        \"key_1\": true,\n        \"key_2\": 9440,\n        \"key_3\": true,\n        \"key_4\": 886\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"params\": {\n        \"key_0\": 3406.3055777229433\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": {\n    \"code\": 1992,\n    \"message\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fd32de19-a504-47d0-b988-4e49b8b52f22",
+              "name": "An API error, described by a Status object.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "thermostat"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "json"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"selection\": {\n    \"selectionType\": \"<string>\",\n    \"selectionMatch\": \"<string>\",\n    \"includeRuntime\": \"<boolean>\",\n    \"includeSettings\": \"<boolean>\",\n    \"includeEvents\": \"<boolean>\",\n    \"includeSensors\": \"<boolean>\",\n    \"includeEquipmentStatus\": \"<boolean>\",\n    \"includeAlerts\": \"<boolean>\",\n    \"includeProgram\": \"<boolean>\"\n  },\n  \"thermostat\": {\n    \"identifier\": \"<string>\",\n    \"name\": \"<string>\",\n    \"thermostatRev\": \"<string>\",\n    \"isRegistered\": \"<boolean>\",\n    \"modelNumber\": \"<string>\",\n    \"brand\": \"<string>\",\n    \"runtime\": {\n      \"key_0\": 2137,\n      \"key_1\": \"string\",\n      \"key_2\": 9199.586602273213,\n      \"key_3\": false\n    },\n    \"settings\": {\n      \"key_0\": true,\n      \"key_1\": \"string\"\n    },\n    \"events\": [\n      {\n        \"key_0\": 1864\n      },\n      {\n        \"key_0\": 184.96124350734,\n        \"key_1\": 5093.471330075976\n      }\n    ],\n    \"remoteSensors\": [\n      {\n        \"key_0\": \"string\"\n      },\n      {\n        \"key_0\": false,\n        \"key_1\": 9283\n      }\n    ]\n  },\n  \"functions\": [\n    {\n      \"type\": \"<string>\",\n      \"params\": {\n        \"key_0\": 4026,\n        \"key_1\": true,\n        \"key_2\": 9440,\n        \"key_3\": true,\n        \"key_4\": 886\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"params\": {\n        \"key_0\": 3406.3055777229433\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": {\n    \"code\": 1992,\n    \"message\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.ecobee.com/1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "66106cb1-4a7a-4eeb-b7da-710f20d803a5",
+    "name": "ecobee Authorization Thermostat Update API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The ecobee API is a REST-like JSON interface for reading and controlling registered ecobee smart thermostats and connected home devices. The data plane is based at https://api.ecobee.com/1 and returns/accepts JSON. Read thermostat runtime, settings, sensors, and equipment status with GET /thermostat, poll for change efficiently with GET /thermostatSummary, and apply writable properties and thermostat functions with POST /thermostat. Historical data is available via GET /runtimeReport and GET /meterReport. Thermostats can be grouped (/group) and, for EMS and Utility accounts, organized in a management-set hierarchy (/hierarchy/*) and driven with demand response events (/demandResponse).\nAuthorization uses OAuth 2.0 with an ecobee PIN flow or the standard authorization-code flow, plus refresh tokens; the OAuth endpoints (/authorize and /token) live on the host root https://api.ecobee.com (without the /1 path). All data-plane requests require an `Authorization: Bearer ACCESS_TOKEN` header.\nNOTE - as of late 2024, ecobee closed its developer program to new API-key registrations; existing keys continue to function. Endpoint shapes below are grounded in ecobee's published v1 API documentation; request/response schemas are simplified models of the documented objects.\n\nContact Support:\n Name: ecobee Developer",
+      "type": "text/plain"
+    }
+  }
+}

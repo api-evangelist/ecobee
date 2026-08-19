@@ -1,0 +1,74 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "ecobee Authorization Reports API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Reports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get runtime report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/1/runtimeReport",
+            "params": [
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Response format. Always `json`."
+              },
+              {
+                "name": "body",
+                "value": "",
+                "type": "query",
+                "description": "URL-encoded JSON request containing `selection`, `startDate`, `endDate`, `columns`, and optional `startInterval`, `endInterval`, and `includeSensors`."
+              }
+            ]
+          },
+          "docs": "Retrieves historical five-minute-interval runtime data for a set of thermostats over a date range. Limited to 25 thermostats and a maximum 31-day period per request."
+        },
+        {
+          "info": {
+            "name": "Get meter report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/1/meterReport",
+            "params": [
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Response format. Always `json`."
+              },
+              {
+                "name": "body",
+                "value": "",
+                "type": "query",
+                "description": "URL-encoded JSON request containing `selection`, `startDate`, `endDate`, and the meter `columns` requested."
+              }
+            ]
+          },
+          "docs": "Retrieves meter reading history (energy / metering data) for a set of thermostats over a bounded date range. Available to EMS and Utility accounts."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

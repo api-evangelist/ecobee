@@ -1,0 +1,62 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "ecobee Authorization Thermostat API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Thermostat",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get thermostats",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/1/thermostat",
+            "params": [
+              {
+                "name": "json",
+                "value": "",
+                "type": "query",
+                "description": "URL-encoded JSON request containing a `selection` object (and optional `page`) that determines the thermostats and data returned."
+              }
+            ]
+          },
+          "docs": "Retrieves a selection of registered thermostats and their requested data (runtime, settings, program, events, alerts, sensors, and more). The Selection object in the `json` query parameter determines which thermostats and which sub-objects are returned."
+        },
+        {
+          "info": {
+            "name": "Get thermostat summary",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/1/thermostatSummary",
+            "params": [
+              {
+                "name": "json",
+                "value": "",
+                "type": "query",
+                "description": "URL-encoded JSON request containing a `selection` object. Set `includeEquipmentStatus` to true to also receive equipment status."
+              }
+            ]
+          },
+          "docs": "Returns a compact revision-list summary for the selected thermostats - thermostat id, name, connection status, and configuration/alert/runtime/ interval revision timestamps - so callers can detect changes without re-fetching full thermostat objects. Optionally includes equipment status. Poll no more frequently than once every three minutes."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

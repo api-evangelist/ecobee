@@ -1,0 +1,47 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "ecobee Authorization Thermostat Update API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Thermostat Update",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Update thermostats and run functions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.ecobee.com/1/thermostat",
+            "params": [
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Response format. Always `json`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates writable thermostat properties and/or executes one or more thermostat functions against a selection of thermostats. Functions are applied in the order listed. Accessible by Smart and EMS accounts; requires the smartWrite scope."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

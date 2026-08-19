@@ -1,0 +1,116 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "ecobee Authorization API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Authorization",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Begin authorization (PIN or authorization code)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/1/authorize",
+            "params": [
+              {
+                "name": "response_type",
+                "value": "",
+                "type": "query",
+                "description": "`ecobeePin` for the PIN flow, or `code` for the authorization-code flow."
+              },
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "query",
+                "description": "The application key (API key) for your application."
+              },
+              {
+                "name": "scope",
+                "value": "",
+                "type": "query",
+                "description": "The requested scope."
+              },
+              {
+                "name": "redirect_uri",
+                "value": "",
+                "type": "query",
+                "description": "Redirect URI for the authorization-code flow."
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query",
+                "description": "Opaque value echoed back for the authorization-code flow."
+              }
+            ]
+          },
+          "docs": "Starts an authorization flow. For the ecobee PIN flow, set `response_type=ecobeePin`; the response returns a PIN, an authorization `code`, and expiry, which the user enters in the ecobee web portal to grant access. For the authorization-code flow, set `response_type=code` with a `redirect_uri`. This endpoint is on the host root, not under /1."
+        },
+        {
+          "info": {
+            "name": "Exchange or refresh tokens",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.ecobee.com/1/token",
+            "params": [
+              {
+                "name": "grant_type",
+                "value": "",
+                "type": "query",
+                "description": "The OAuth grant type."
+              },
+              {
+                "name": "code",
+                "value": "",
+                "type": "query",
+                "description": "The authorization code (for ecobeePin / authorization_code grants)."
+              },
+              {
+                "name": "refresh_token",
+                "value": "",
+                "type": "query",
+                "description": "The refresh token (for the refresh_token grant)."
+              },
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "query",
+                "description": "The application key (API key) for your application."
+              },
+              {
+                "name": "redirect_uri",
+                "value": "",
+                "type": "query",
+                "description": "Redirect URI (for the authorization_code grant)."
+              },
+              {
+                "name": "ecobee_type",
+                "value": "",
+                "type": "query",
+                "description": "Set to `jwt` to have the API return access tokens as JWTs."
+              }
+            ]
+          },
+          "docs": "Exchanges an authorization code for an access token and refresh token (`grant_type=ecobeePin` or `authorization_code`), or refreshes an expired access token (`grant_type=refresh_token`). Parameters are passed as query string. This endpoint is on the host root, not under /1."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

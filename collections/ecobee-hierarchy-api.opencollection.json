@@ -1,0 +1,131 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "ecobee Authorization Hierarchy API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Hierarchy",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Register, unregister, move, or assign thermostats",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.ecobee.com/1/hierarchy/thermostat",
+            "params": [
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Response format. Always `json`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Registers one or more thermostats with the hierarchy and optionally assigns them to a management set, or unregisters, moves, or assigns existing thermostats. The `operation` field selects the action. Accessible by EMS and Utility accounts only."
+        },
+        {
+          "info": {
+            "name": "List management sets",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/1/hierarchy/set",
+            "params": [
+              {
+                "name": "json",
+                "value": "",
+                "type": "query",
+                "description": "URL-encoded JSON request containing the set query."
+              }
+            ]
+          },
+          "docs": "Lists the management sets in the account hierarchy. Accessible by EMS and Utility accounts only."
+        },
+        {
+          "info": {
+            "name": "Add, remove, rename, or move a management set",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.ecobee.com/1/hierarchy/set",
+            "params": [
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Response format. Always `json`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds, removes, renames, or moves a management set. The `operation` field selects the action. Accessible by EMS and Utility accounts only."
+        },
+        {
+          "info": {
+            "name": "List hierarchy users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/1/hierarchy/user",
+            "params": [
+              {
+                "name": "json",
+                "value": "",
+                "type": "query",
+                "description": "URL-encoded JSON request containing the user query."
+              }
+            ]
+          },
+          "docs": "Lists the users in the account hierarchy. Accessible by EMS and Utility accounts only."
+        },
+        {
+          "info": {
+            "name": "Add, update, remove, or unregister a hierarchy user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.ecobee.com/1/hierarchy/user",
+            "params": [
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Response format. Always `json`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds, updates, removes, or unregisters a user in the hierarchy. The `operation` field selects the action. Accessible by EMS and Utility accounts only."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,66 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "ecobee Authorization Demand Response API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Demand Response",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List demand responses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/1/demandResponse",
+            "params": [
+              {
+                "name": "json",
+                "value": "",
+                "type": "query",
+                "description": "URL-encoded JSON request containing the query selection."
+              }
+            ]
+          },
+          "docs": "Lists the Demand Response events. Accessible by Utility accounts only."
+        },
+        {
+          "info": {
+            "name": "Issue or cancel a demand response",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.ecobee.com/1/demandResponse",
+            "params": [
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Response format. Always `json`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Issues a Demand Response event to a set of thermostats to adjust their program, or cancels a previously issued event (via a cancel demand response request body). Accessible by Utility accounts only."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,66 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "ecobee Authorization Group API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Group",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.ecobee.com/1/group",
+            "params": [
+              {
+                "name": "json",
+                "value": "",
+                "type": "query",
+                "description": "URL-encoded JSON request containing a `selection` object."
+              }
+            ]
+          },
+          "docs": "Retrieves the Group and grouping data for the thermostats registered to the user. Accessible by Smart accounts only."
+        },
+        {
+          "info": {
+            "name": "Update groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.ecobee.com/1/group",
+            "params": [
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Response format. Always `json`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates or updates the grouping of the user's thermostats. Accessible by Smart accounts only."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,346 @@
+{
+  "item": [
+    {
+      "id": "751e8ebd-1577-488b-bfd5-189863d432ee",
+      "name": "Group",
+      "description": {
+        "content": "Group registered thermostats.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b9fec5df-8125-4086-99cb-9de7137aadab",
+          "name": "Get groups",
+          "request": {
+            "name": "Get groups",
+            "description": {
+              "content": "Retrieves the Group and grouping data for the thermostats registered to the user. Accessible by Smart accounts only.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "group"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "json",
+                  "value": "<string>",
+                  "description": "(Required) URL-encoded JSON request containing a `selection` object."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "acfce93c-cff3-4746-935a-652964b8dc6b",
+              "name": "The groups registered to the user.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "group"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "json",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"groups\": [\n    {\n      \"groupRef\": \"string\",\n      \"groupName\": \"string\",\n      \"thermostats\": [\n        \"string\",\n        \"string\"\n      ],\n      \"synchronizeSystemMode\": false,\n      \"synchronizeVacation\": true\n    },\n    {\n      \"groupRef\": \"string\",\n      \"groupName\": \"string\",\n      \"thermostats\": [\n        \"string\",\n        \"string\"\n      ],\n      \"synchronizeSystemMode\": false,\n      \"synchronizeVacation\": false\n    }\n  ],\n  \"status\": {\n    \"code\": 5828,\n    \"message\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "703ed003-63d9-4e8f-92d5-de12f29189fe",
+              "name": "Missing, invalid, or expired access token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "group"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "json",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": {\n    \"code\": 2991,\n    \"message\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "115dc015-0104-4238-84ef-75be1737b0ec",
+          "name": "Update groups",
+          "request": {
+            "name": "Update groups",
+            "description": {
+              "content": "Creates or updates the grouping of the user's thermostats. Accessible by Smart accounts only.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "group"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "format",
+                  "value": "json",
+                  "description": "(Required) Response format. Always `json`."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"selection\": {\n    \"selectionType\": \"<string>\",\n    \"selectionMatch\": \"<string>\",\n    \"includeRuntime\": \"<boolean>\",\n    \"includeSettings\": \"<boolean>\",\n    \"includeEvents\": \"<boolean>\",\n    \"includeSensors\": \"<boolean>\",\n    \"includeEquipmentStatus\": \"<boolean>\",\n    \"includeAlerts\": \"<boolean>\",\n    \"includeProgram\": \"<boolean>\"\n  },\n  \"groups\": [\n    {\n      \"groupRef\": \"<string>\",\n      \"groupName\": \"<string>\",\n      \"thermostats\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"synchronizeSystemMode\": \"<boolean>\",\n      \"synchronizeVacation\": \"<boolean>\"\n    },\n    {\n      \"groupRef\": \"<string>\",\n      \"groupName\": \"<string>\",\n      \"thermostats\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"synchronizeSystemMode\": \"<boolean>\",\n      \"synchronizeVacation\": \"<boolean>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c7e14804-0e5f-4fd4-8212-0592bc4e56c8",
+              "name": "A Status object and the updated groups.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "group"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "json"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"selection\": {\n    \"selectionType\": \"<string>\",\n    \"selectionMatch\": \"<string>\",\n    \"includeRuntime\": \"<boolean>\",\n    \"includeSettings\": \"<boolean>\",\n    \"includeEvents\": \"<boolean>\",\n    \"includeSensors\": \"<boolean>\",\n    \"includeEquipmentStatus\": \"<boolean>\",\n    \"includeAlerts\": \"<boolean>\",\n    \"includeProgram\": \"<boolean>\"\n  },\n  \"groups\": [\n    {\n      \"groupRef\": \"<string>\",\n      \"groupName\": \"<string>\",\n      \"thermostats\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"synchronizeSystemMode\": \"<boolean>\",\n      \"synchronizeVacation\": \"<boolean>\"\n    },\n    {\n      \"groupRef\": \"<string>\",\n      \"groupName\": \"<string>\",\n      \"thermostats\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"synchronizeSystemMode\": \"<boolean>\",\n      \"synchronizeVacation\": \"<boolean>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"groups\": [\n    {\n      \"groupRef\": \"<string>\",\n      \"groupName\": \"<string>\",\n      \"thermostats\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"synchronizeSystemMode\": \"<boolean>\",\n      \"synchronizeVacation\": \"<boolean>\"\n    },\n    {\n      \"groupRef\": \"<string>\",\n      \"groupName\": \"<string>\",\n      \"thermostats\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"synchronizeSystemMode\": \"<boolean>\",\n      \"synchronizeVacation\": \"<boolean>\"\n    }\n  ],\n  \"status\": {\n    \"code\": 6668,\n    \"message\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ab4ed694-a2b5-4e39-8e4c-f8703e4d9f69",
+              "name": "Missing, invalid, or expired access token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "group"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "json"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"selection\": {\n    \"selectionType\": \"<string>\",\n    \"selectionMatch\": \"<string>\",\n    \"includeRuntime\": \"<boolean>\",\n    \"includeSettings\": \"<boolean>\",\n    \"includeEvents\": \"<boolean>\",\n    \"includeSensors\": \"<boolean>\",\n    \"includeEquipmentStatus\": \"<boolean>\",\n    \"includeAlerts\": \"<boolean>\",\n    \"includeProgram\": \"<boolean>\"\n  },\n  \"groups\": [\n    {\n      \"groupRef\": \"<string>\",\n      \"groupName\": \"<string>\",\n      \"thermostats\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"synchronizeSystemMode\": \"<boolean>\",\n      \"synchronizeVacation\": \"<boolean>\"\n    },\n    {\n      \"groupRef\": \"<string>\",\n      \"groupName\": \"<string>\",\n      \"thermostats\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"synchronizeSystemMode\": \"<boolean>\",\n      \"synchronizeVacation\": \"<boolean>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": {\n    \"code\": 2991,\n    \"message\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.ecobee.com/1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "a578930c-f6a9-4d0e-b48f-764be1b1e516",
+    "name": "ecobee Authorization Group API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The ecobee API is a REST-like JSON interface for reading and controlling registered ecobee smart thermostats and connected home devices. The data plane is based at https://api.ecobee.com/1 and returns/accepts JSON. Read thermostat runtime, settings, sensors, and equipment status with GET /thermostat, poll for change efficiently with GET /thermostatSummary, and apply writable properties and thermostat functions with POST /thermostat. Historical data is available via GET /runtimeReport and GET /meterReport. Thermostats can be grouped (/group) and, for EMS and Utility accounts, organized in a management-set hierarchy (/hierarchy/*) and driven with demand response events (/demandResponse).\nAuthorization uses OAuth 2.0 with an ecobee PIN flow or the standard authorization-code flow, plus refresh tokens; the OAuth endpoints (/authorize and /token) live on the host root https://api.ecobee.com (without the /1 path). All data-plane requests require an `Authorization: Bearer ACCESS_TOKEN` header.\nNOTE - as of late 2024, ecobee closed its developer program to new API-key registrations; existing keys continue to function. Endpoint shapes below are grounded in ecobee's published v1 API documentation; request/response schemas are simplified models of the documented objects.\n\nContact Support:\n Name: ecobee Developer",
+      "type": "text/plain"
+    }
+  }
+}
