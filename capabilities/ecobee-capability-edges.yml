@@ -18,7 +18,8 @@ edges:
   capability_id: BC-2070.50
   capability_id_l1: BC-2070
   capability_name: Demand Response & Grid Interaction Management
-  confidence: 0.95
-  evidence: POST /demandResponse  Issue or cancel a demand response; DemandResponseRequest
-  reason: Operations issue and cancel demand-response events across thermostats for EMS/Utility accounts,
-    which is exactly grid-interactive building behaviour and demand-response programme operation.
+  confidence: 0.9
+  evidence: '"Issue or cancel a demand response"; "driven with demand response events (/demandResponse)"
+    for EMS and Utility accounts'
+  reason: Operations issue, list and cancel demand-response events across registered thermostats — directly
+    the grid-interactive building behaviour and demand-response participation capability.
