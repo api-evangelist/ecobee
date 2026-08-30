@@ -381,6 +381,9 @@ apis:
   - type: Authentication
     url: https://www.ecobee.com/home/developer/api/documentation/v1/auth/token-refresh.shtml
 common:
+- type: CapabilityMap
+  url: capabilities/ecobee-capability-edges.yml
+  name: ecobee Business Capability Map
 - type: AgenticAccess
   url: agentic-access/ecobee-agentic-access.yml
 - type: DomainSecurity
