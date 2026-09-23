@@ -1,11 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: ecobee Authorization Hierarchy API
-  description: 'The ecobee API is a REST-like JSON interface for reading and controlling registered ecobee smart thermostats and connected home devices. The data plane is based at https://api.ecobee.com/1 and returns/accepts JSON. Read thermostat runtime, settings, sensors, and equipment status with GET /thermostat, poll for change efficiently with GET /thermostatSummary, and apply writable properties and thermostat functions with POST /thermostat. Historical data is available via GET /runtimeReport and GET /meterReport. Thermostats can be grouped (/group) and, for EMS and Utility accounts, organized in a management-set hierarchy (/hierarchy/*) and driven with demand response events (/demandResponse).
-
-    Authorization uses OAuth 2.0 with an ecobee PIN flow or the standard authorization-code flow, plus refresh tokens; the OAuth endpoints (/authorize and /token) live on the host root https://api.ecobee.com (without the /1 path). All data-plane requests require an `Authorization: Bearer ACCESS_TOKEN` header.
-
-    NOTE - as of late 2024, ecobee closed its developer program to new API-key registrations; existing keys continue to function. Endpoint shapes below are grounded in ecobee''s published v1 API documentation; request/response schemas are simplified models of the documented objects.'
+  title: ecobee Hierarchy API
+  description: The ecobee API is a REST-like JSON interface for reading and controlling registered ecobee smart thermostats and connected home devices.
   version: '1.0'
   contact:
     name: ecobee Developer
@@ -157,46 +153,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    HierarchyThermostatRequest:
-      type: object
-      required:
-      - operation
-      properties:
-        operation:
-          type: string
-          enum:
-          - register
-          - unregister
-          - move
-          - assign
-        setPath:
-          type: string
-        thermostats:
-          type: string
-          description: Comma-separated thermostat identifiers.
-    HierarchySetRequest:
-      type: object
-      required:
-      - operation
-      properties:
-        operation:
-          type: string
-          enum:
-          - add
-          - remove
-          - rename
-          - move
-        setPath:
-          type: string
-        setName:
-          type: string
-        parentPath:
-          type: string
-    StatusResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/Status'
     HierarchyUserRequest:
       type: object
       required:
@@ -217,6 +173,11 @@ components:
           type: array
           items:
             type: string
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
     Status:
       type: object
       description: Standard ecobee response status.
@@ -226,6 +187,41 @@ components:
           description: The status code (0 indicates success).
         message:
           type: string
+    HierarchySetRequest:
+      type: object
+      required:
+      - operation
+      properties:
+        operation:
+          type: string
+          enum:
+          - add
+          - remove
+          - rename
+          - move
+        setPath:
+          type: string
+        setName:
+          type: string
+        parentPath:
+          type: string
+    HierarchyThermostatRequest:
+      type: object
+      required:
+      - operation
+      properties:
+        operation:
+          type: string
+          enum:
+          - register
+          - unregister
+          - move
+          - assign
+        setPath:
+          type: string
+        thermostats:
+          type: string
+          description: Comma-separated thermostat identifiers.
   responses:
     Unauthorized:
       description: Missing, invalid, or expired access token.

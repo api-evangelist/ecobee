@@ -1,11 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: ecobee Authorization Thermostat Update API
-  description: 'The ecobee API is a REST-like JSON interface for reading and controlling registered ecobee smart thermostats and connected home devices. The data plane is based at https://api.ecobee.com/1 and returns/accepts JSON. Read thermostat runtime, settings, sensors, and equipment status with GET /thermostat, poll for change efficiently with GET /thermostatSummary, and apply writable properties and thermostat functions with POST /thermostat. Historical data is available via GET /runtimeReport and GET /meterReport. Thermostats can be grouped (/group) and, for EMS and Utility accounts, organized in a management-set hierarchy (/hierarchy/*) and driven with demand response events (/demandResponse).
-
-    Authorization uses OAuth 2.0 with an ecobee PIN flow or the standard authorization-code flow, plus refresh tokens; the OAuth endpoints (/authorize and /token) live on the host root https://api.ecobee.com (without the /1 path). All data-plane requests require an `Authorization: Bearer ACCESS_TOKEN` header.
-
-    NOTE - as of late 2024, ecobee closed its developer program to new API-key registrations; existing keys continue to function. Endpoint shapes below are grounded in ecobee''s published v1 API documentation; request/response schemas are simplified models of the documented objects.'
+  title: ecobee Thermostat Update API
+  description: The ecobee API is a REST-like JSON interface for reading and controlling registered ecobee smart thermostats and connected home devices.
   version: '1.0'
   contact:
     name: ecobee Developer
@@ -55,6 +51,23 @@ paths:
           $ref: '#/components/responses/ApiError'
 components:
   schemas:
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+    Function:
+      type: object
+      description: A thermostat function to execute.
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The function name - e.g. setHold, resumeProgram, sendMessage, createVacation, deleteVacation, setOccupied, controlPlug, updateSensor, acknowledge.
+        params:
+          type: object
+          additionalProperties: true
     Selection:
       type: object
       description: Determines which thermostats and which sub-objects are returned or acted upon.
@@ -85,6 +98,15 @@ components:
           type: boolean
         includeProgram:
           type: boolean
+    Status:
+      type: object
+      description: Standard ecobee response status.
+      properties:
+        code:
+          type: integer
+          description: The status code (0 indicates success).
+        message:
+          type: string
     Thermostat:
       type: object
       properties:
@@ -129,32 +151,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Function'
-    StatusResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/Status'
-    Function:
-      type: object
-      description: A thermostat function to execute.
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          description: The function name - e.g. setHold, resumeProgram, sendMessage, createVacation, deleteVacation, setOccupied, controlPlug, updateSensor, acknowledge.
-        params:
-          type: object
-          additionalProperties: true
-    Status:
-      type: object
-      description: Standard ecobee response status.
-      properties:
-        code:
-          type: integer
-          description: The status code (0 indicates success).
-        message:
-          type: string
   responses:
     Unauthorized:
       description: Missing, invalid, or expired access token.

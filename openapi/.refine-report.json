@@ -1,13 +1,7 @@
 {
   "provider": "ecobee",
   "sources": [
-    "ecobee-authorization-api-openapi.yml",
-    "ecobee-demand-response-api-openapi.yml",
-    "ecobee-group-api-openapi.yml",
-    "ecobee-hierarchy-api-openapi.yml",
-    "ecobee-reports-api-openapi.yml",
-    "ecobee-thermostat-api-openapi.yml",
-    "ecobee-thermostat-update-api-openapi.yml"
+    "_original/ecobee-openapi.yml"
   ],
   "outputs": [
     "ecobee-authorization-api-openapi.yml",
@@ -21,6 +15,18 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "ecobee-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "ecobee-authorization-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ecobee-demand-response-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ecobee-group-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ecobee-hierarchy-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ecobee-reports-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ecobee-thermostat-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ecobee-thermostat-update-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
