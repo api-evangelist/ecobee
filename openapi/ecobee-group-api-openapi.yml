@@ -71,20 +71,23 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    GroupResponse:
-      type: object
-      properties:
-        groups:
-          type: array
-          items:
-            $ref: '#/components/schemas/Group'
-        status:
-          $ref: '#/components/schemas/Status'
     StatusResponse:
       type: object
       properties:
         status:
           $ref: '#/components/schemas/Status'
+    GroupRequest:
+      type: object
+      required:
+      - selection
+      - groups
+      properties:
+        selection:
+          $ref: '#/components/schemas/Selection'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
     Selection:
       type: object
       description: Determines which thermostats and which sub-objects are returned or acted upon.
@@ -115,6 +118,15 @@ components:
           type: boolean
         includeProgram:
           type: boolean
+    GroupResponse:
+      type: object
+      properties:
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+        status:
+          $ref: '#/components/schemas/Status'
     Status:
       type: object
       description: Standard ecobee response status.
@@ -139,18 +151,6 @@ components:
           type: boolean
         synchronizeVacation:
           type: boolean
-    GroupRequest:
-      type: object
-      required:
-      - selection
-      - groups
-      properties:
-        selection:
-          $ref: '#/components/schemas/Selection'
-        groups:
-          type: array
-          items:
-            $ref: '#/components/schemas/Group'
   responses:
     Unauthorized:
       description: Missing, invalid, or expired access token.

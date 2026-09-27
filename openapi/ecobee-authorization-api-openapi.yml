@@ -141,20 +141,6 @@ components:
       properties:
         status:
           $ref: '#/components/schemas/Status'
-    PinResponse:
-      type: object
-      properties:
-        ecobeePin:
-          type: string
-        code:
-          type: string
-          description: The authorization code to exchange at /token.
-        scope:
-          type: string
-        expires_in:
-          type: integer
-        interval:
-          type: integer
     Status:
       type: object
       description: Standard ecobee response status.
@@ -177,6 +163,20 @@ components:
           type: string
         scope:
           type: string
+    PinResponse:
+      type: object
+      properties:
+        ecobeePin:
+          type: string
+        code:
+          type: string
+          description: The authorization code to exchange at /token.
+        scope:
+          type: string
+        expires_in:
+          type: integer
+        interval:
+          type: integer
   responses:
     ApiError:
       description: An API error, described by a Status object.

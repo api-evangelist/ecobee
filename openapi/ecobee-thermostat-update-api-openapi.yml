@@ -56,18 +56,6 @@ components:
       properties:
         status:
           $ref: '#/components/schemas/Status'
-    Function:
-      type: object
-      description: A thermostat function to execute.
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          description: The function name - e.g. setHold, resumeProgram, sendMessage, createVacation, deleteVacation, setOccupied, controlPlug, updateSensor, acknowledge.
-        params:
-          type: object
-          additionalProperties: true
     Selection:
       type: object
       description: Determines which thermostats and which sub-objects are returned or acted upon.
@@ -98,15 +86,6 @@ components:
           type: boolean
         includeProgram:
           type: boolean
-    Status:
-      type: object
-      description: Standard ecobee response status.
-      properties:
-        code:
-          type: integer
-          description: The status code (0 indicates success).
-        message:
-          type: string
     Thermostat:
       type: object
       properties:
@@ -138,6 +117,27 @@ components:
           items:
             type: object
             additionalProperties: true
+    Function:
+      type: object
+      description: A thermostat function to execute.
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The function name - e.g. setHold, resumeProgram, sendMessage, createVacation, deleteVacation, setOccupied, controlPlug, updateSensor, acknowledge.
+        params:
+          type: object
+          additionalProperties: true
+    Status:
+      type: object
+      description: Standard ecobee response status.
+      properties:
+        code:
+          type: integer
+          description: The status code (0 indicates success).
+        message:
+          type: string
     UpdateThermostatRequest:
       type: object
       required:
@@ -152,14 +152,14 @@ components:
           items:
             $ref: '#/components/schemas/Function'
   responses:
-    Unauthorized:
-      description: Missing, invalid, or expired access token.
+    ApiError:
+      description: An API error, described by a Status object.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/StatusResponse'
-    ApiError:
-      description: An API error, described by a Status object.
+    Unauthorized:
+      description: Missing, invalid, or expired access token.
       content:
         application/json:
           schema:

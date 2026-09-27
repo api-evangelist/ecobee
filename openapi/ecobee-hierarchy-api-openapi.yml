@@ -153,6 +153,20 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+    Status:
+      type: object
+      description: Standard ecobee response status.
+      properties:
+        code:
+          type: integer
+          description: The status code (0 indicates success).
+        message:
+          type: string
     HierarchyUserRequest:
       type: object
       required:
@@ -173,20 +187,6 @@ components:
           type: array
           items:
             type: string
-    StatusResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/Status'
-    Status:
-      type: object
-      description: Standard ecobee response status.
-      properties:
-        code:
-          type: integer
-          description: The status code (0 indicates success).
-        message:
-          type: string
     HierarchySetRequest:
       type: object
       required:
