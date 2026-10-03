@@ -65,22 +65,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    StatusResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/Status'
-    Page:
-      type: object
-      properties:
-        page:
-          type: integer
-        totalPages:
-          type: integer
-        pageSize:
-          type: integer
-        total:
-          type: integer
     Thermostat:
       type: object
       properties:
@@ -112,6 +96,22 @@ components:
           items:
             type: object
             additionalProperties: true
+    Page:
+      type: object
+      properties:
+        page:
+          type: integer
+        totalPages:
+          type: integer
+        pageSize:
+          type: integer
+        total:
+          type: integer
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
     Status:
       type: object
       description: Standard ecobee response status.

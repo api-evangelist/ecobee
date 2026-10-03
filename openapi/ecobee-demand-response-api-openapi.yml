@@ -71,11 +71,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    StatusResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/Status'
     Selection:
       type: object
       description: Determines which thermostats and which sub-objects are returned or acted upon.
@@ -120,6 +115,11 @@ components:
         demandResponseRef:
           type: string
           description: Reference to a demand response to cancel.
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
     Status:
       type: object
       description: Standard ecobee response status.

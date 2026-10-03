@@ -51,41 +51,6 @@ paths:
           $ref: '#/components/responses/ApiError'
 components:
   schemas:
-    StatusResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/Status'
-    Selection:
-      type: object
-      description: Determines which thermostats and which sub-objects are returned or acted upon.
-      required:
-      - selectionType
-      properties:
-        selectionType:
-          type: string
-          enum:
-          - registered
-          - thermostats
-          - managementSet
-          description: How to interpret selectionMatch.
-        selectionMatch:
-          type: string
-          description: Comma-separated thermostat identifiers, a management set path, or an empty string for all registered thermostats.
-        includeRuntime:
-          type: boolean
-        includeSettings:
-          type: boolean
-        includeEvents:
-          type: boolean
-        includeSensors:
-          type: boolean
-        includeEquipmentStatus:
-          type: boolean
-        includeAlerts:
-          type: boolean
-        includeProgram:
-          type: boolean
     Thermostat:
       type: object
       properties:
@@ -117,6 +82,54 @@ components:
           items:
             type: object
             additionalProperties: true
+    Selection:
+      type: object
+      description: Determines which thermostats and which sub-objects are returned or acted upon.
+      required:
+      - selectionType
+      properties:
+        selectionType:
+          type: string
+          enum:
+          - registered
+          - thermostats
+          - managementSet
+          description: How to interpret selectionMatch.
+        selectionMatch:
+          type: string
+          description: Comma-separated thermostat identifiers, a management set path, or an empty string for all registered thermostats.
+        includeRuntime:
+          type: boolean
+        includeSettings:
+          type: boolean
+        includeEvents:
+          type: boolean
+        includeSensors:
+          type: boolean
+        includeEquipmentStatus:
+          type: boolean
+        includeAlerts:
+          type: boolean
+        includeProgram:
+          type: boolean
+    UpdateThermostatRequest:
+      type: object
+      required:
+      - selection
+      properties:
+        selection:
+          $ref: '#/components/schemas/Selection'
+        thermostat:
+          $ref: '#/components/schemas/Thermostat'
+        functions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Function'
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
     Function:
       type: object
       description: A thermostat function to execute.
@@ -138,19 +151,6 @@ components:
           description: The status code (0 indicates success).
         message:
           type: string
-    UpdateThermostatRequest:
-      type: object
-      required:
-      - selection
-      properties:
-        selection:
-          $ref: '#/components/schemas/Selection'
-        thermostat:
-          $ref: '#/components/schemas/Thermostat'
-        functions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Function'
   responses:
     ApiError:
       description: An API error, described by a Status object.

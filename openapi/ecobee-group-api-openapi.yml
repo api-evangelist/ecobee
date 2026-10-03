@@ -71,23 +71,15 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    StatusResponse:
+    GroupResponse:
       type: object
       properties:
-        status:
-          $ref: '#/components/schemas/Status'
-    GroupRequest:
-      type: object
-      required:
-      - selection
-      - groups
-      properties:
-        selection:
-          $ref: '#/components/schemas/Selection'
         groups:
           type: array
           items:
             $ref: '#/components/schemas/Group'
+        status:
+          $ref: '#/components/schemas/Status'
     Selection:
       type: object
       description: Determines which thermostats and which sub-objects are returned or acted upon.
@@ -118,13 +110,21 @@ components:
           type: boolean
         includeProgram:
           type: boolean
-    GroupResponse:
+    GroupRequest:
       type: object
+      required:
+      - selection
+      - groups
       properties:
+        selection:
+          $ref: '#/components/schemas/Selection'
         groups:
           type: array
           items:
             $ref: '#/components/schemas/Group'
+    StatusResponse:
+      type: object
+      properties:
         status:
           $ref: '#/components/schemas/Status'
     Status:

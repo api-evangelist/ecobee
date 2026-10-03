@@ -79,6 +79,17 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    RuntimeReportRow:
+      type: object
+      properties:
+        thermostatIdentifier:
+          type: string
+        rowCount:
+          type: integer
+        rowList:
+          type: array
+          items:
+            type: string
     StatusResponse:
       type: object
       properties:
@@ -99,17 +110,6 @@ components:
             $ref: '#/components/schemas/RuntimeReportRow'
         status:
           $ref: '#/components/schemas/Status'
-    RuntimeReportRow:
-      type: object
-      properties:
-        thermostatIdentifier:
-          type: string
-        rowCount:
-          type: integer
-        rowList:
-          type: array
-          items:
-            type: string
     Status:
       type: object
       description: Standard ecobee response status.
