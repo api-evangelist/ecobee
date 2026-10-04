@@ -65,6 +65,34 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    ThermostatSummaryResponse:
+      type: object
+      properties:
+        thermostatCount:
+          type: integer
+        revisionList:
+          type: array
+          description: Colon-separated values per thermostat - identifier, name, connected, and config/alerts/runtime/interval revision timestamps.
+          items:
+            type: string
+        statusList:
+          type: array
+          description: Colon-separated equipment status per thermostat (when requested).
+          items:
+            type: string
+        status:
+          $ref: '#/components/schemas/Status'
+    Page:
+      type: object
+      properties:
+        page:
+          type: integer
+        totalPages:
+          type: integer
+        pageSize:
+          type: integer
+        total:
+          type: integer
     Thermostat:
       type: object
       properties:
@@ -96,22 +124,6 @@ components:
           items:
             type: object
             additionalProperties: true
-    Page:
-      type: object
-      properties:
-        page:
-          type: integer
-        totalPages:
-          type: integer
-        pageSize:
-          type: integer
-        total:
-          type: integer
-    StatusResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/Status'
     Status:
       type: object
       description: Standard ecobee response status.
@@ -132,21 +144,9 @@ components:
             $ref: '#/components/schemas/Thermostat'
         status:
           $ref: '#/components/schemas/Status'
-    ThermostatSummaryResponse:
+    StatusResponse:
       type: object
       properties:
-        thermostatCount:
-          type: integer
-        revisionList:
-          type: array
-          description: Colon-separated values per thermostat - identifier, name, connected, and config/alerts/runtime/interval revision timestamps.
-          items:
-            type: string
-        statusList:
-          type: array
-          description: Colon-separated equipment status per thermostat (when requested).
-          items:
-            type: string
         status:
           $ref: '#/components/schemas/Status'
   responses:

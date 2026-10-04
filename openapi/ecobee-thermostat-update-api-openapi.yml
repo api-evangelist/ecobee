@@ -50,7 +50,62 @@ paths:
         '500':
           $ref: '#/components/responses/ApiError'
 components:
+  responses:
+    ApiError:
+      description: An API error, described by a Status object.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StatusResponse'
+    Unauthorized:
+      description: Missing, invalid, or expired access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StatusResponse'
   schemas:
+    Selection:
+      type: object
+      description: Determines which thermostats and which sub-objects are returned or acted upon.
+      required:
+      - selectionType
+      properties:
+        selectionType:
+          type: string
+          enum:
+          - registered
+          - thermostats
+          - managementSet
+          description: How to interpret selectionMatch.
+        selectionMatch:
+          type: string
+          description: Comma-separated thermostat identifiers, a management set path, or an empty string for all registered thermostats.
+        includeRuntime:
+          type: boolean
+        includeSettings:
+          type: boolean
+        includeEvents:
+          type: boolean
+        includeSensors:
+          type: boolean
+        includeEquipmentStatus:
+          type: boolean
+        includeAlerts:
+          type: boolean
+        includeProgram:
+          type: boolean
+    Function:
+      type: object
+      description: A thermostat function to execute.
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: The function name - e.g. setHold, resumeProgram, sendMessage, createVacation, deleteVacation, setOccupied, controlPlug, updateSensor, acknowledge.
+        params:
+          type: object
+          additionalProperties: true
     Thermostat:
       type: object
       properties:
@@ -82,36 +137,15 @@ components:
           items:
             type: object
             additionalProperties: true
-    Selection:
+    Status:
       type: object
-      description: Determines which thermostats and which sub-objects are returned or acted upon.
-      required:
-      - selectionType
+      description: Standard ecobee response status.
       properties:
-        selectionType:
+        code:
+          type: integer
+          description: The status code (0 indicates success).
+        message:
           type: string
-          enum:
-          - registered
-          - thermostats
-          - managementSet
-          description: How to interpret selectionMatch.
-        selectionMatch:
-          type: string
-          description: Comma-separated thermostat identifiers, a management set path, or an empty string for all registered thermostats.
-        includeRuntime:
-          type: boolean
-        includeSettings:
-          type: boolean
-        includeEvents:
-          type: boolean
-        includeSensors:
-          type: boolean
-        includeEquipmentStatus:
-          type: boolean
-        includeAlerts:
-          type: boolean
-        includeProgram:
-          type: boolean
     UpdateThermostatRequest:
       type: object
       required:
@@ -130,40 +164,6 @@ components:
       properties:
         status:
           $ref: '#/components/schemas/Status'
-    Function:
-      type: object
-      description: A thermostat function to execute.
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          description: The function name - e.g. setHold, resumeProgram, sendMessage, createVacation, deleteVacation, setOccupied, controlPlug, updateSensor, acknowledge.
-        params:
-          type: object
-          additionalProperties: true
-    Status:
-      type: object
-      description: Standard ecobee response status.
-      properties:
-        code:
-          type: integer
-          description: The status code (0 indicates success).
-        message:
-          type: string
-  responses:
-    ApiError:
-      description: An API error, described by a Status object.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/StatusResponse'
-    Unauthorized:
-      description: Missing, invalid, or expired access token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/StatusResponse'
   securitySchemes:
     bearerAuth:
       type: http

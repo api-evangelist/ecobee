@@ -101,6 +101,15 @@ components:
           type: boolean
         includeProgram:
           type: boolean
+    Status:
+      type: object
+      description: Standard ecobee response status.
+      properties:
+        code:
+          type: integer
+          description: The status code (0 indicates success).
+        message:
+          type: string
     DemandResponseRequest:
       type: object
       required:
@@ -120,15 +129,6 @@ components:
       properties:
         status:
           $ref: '#/components/schemas/Status'
-    Status:
-      type: object
-      description: Standard ecobee response status.
-      properties:
-        code:
-          type: integer
-          description: The status code (0 indicates success).
-        message:
-          type: string
   responses:
     Unauthorized:
       description: Missing, invalid, or expired access token.

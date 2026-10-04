@@ -90,11 +90,15 @@ components:
           type: array
           items:
             type: string
-    StatusResponse:
+    Status:
       type: object
+      description: Standard ecobee response status.
       properties:
-        status:
-          $ref: '#/components/schemas/Status'
+        code:
+          type: integer
+          description: The status code (0 indicates success).
+        message:
+          type: string
     RuntimeReportResponse:
       type: object
       properties:
@@ -110,15 +114,11 @@ components:
             $ref: '#/components/schemas/RuntimeReportRow'
         status:
           $ref: '#/components/schemas/Status'
-    Status:
+    StatusResponse:
       type: object
-      description: Standard ecobee response status.
       properties:
-        code:
-          type: integer
-          description: The status code (0 indicates success).
-        message:
-          type: string
+        status:
+          $ref: '#/components/schemas/Status'
   responses:
     Unauthorized:
       description: Missing, invalid, or expired access token.

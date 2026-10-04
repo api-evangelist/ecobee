@@ -153,6 +153,23 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    HierarchyThermostatRequest:
+      type: object
+      required:
+      - operation
+      properties:
+        operation:
+          type: string
+          enum:
+          - register
+          - unregister
+          - move
+          - assign
+        setPath:
+          type: string
+        thermostats:
+          type: string
+          description: Comma-separated thermostat identifiers.
     HierarchySetRequest:
       type: object
       required:
@@ -171,37 +188,6 @@ components:
           type: string
         parentPath:
           type: string
-    StatusResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/Status'
-    Status:
-      type: object
-      description: Standard ecobee response status.
-      properties:
-        code:
-          type: integer
-          description: The status code (0 indicates success).
-        message:
-          type: string
-    HierarchyThermostatRequest:
-      type: object
-      required:
-      - operation
-      properties:
-        operation:
-          type: string
-          enum:
-          - register
-          - unregister
-          - move
-          - assign
-        setPath:
-          type: string
-        thermostats:
-          type: string
-          description: Comma-separated thermostat identifiers.
     HierarchyUserRequest:
       type: object
       required:
@@ -222,6 +208,20 @@ components:
           type: array
           items:
             type: string
+    Status:
+      type: object
+      description: Standard ecobee response status.
+      properties:
+        code:
+          type: integer
+          description: The status code (0 indicates success).
+        message:
+          type: string
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
   responses:
     Unauthorized:
       description: Missing, invalid, or expired access token.

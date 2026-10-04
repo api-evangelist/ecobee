@@ -135,7 +135,36 @@ paths:
         '400':
           $ref: '#/components/responses/ApiError'
 components:
+  responses:
+    ApiError:
+      description: An API error, described by a Status object.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StatusResponse'
   schemas:
+    Status:
+      type: object
+      description: Standard ecobee response status.
+      properties:
+        code:
+          type: integer
+          description: The status code (0 indicates success).
+        message:
+          type: string
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+        expires_in:
+          type: integer
+        refresh_token:
+          type: string
+        scope:
+          type: string
     PinResponse:
       type: object
       properties:
@@ -150,40 +179,11 @@ components:
           type: integer
         interval:
           type: integer
-    TokenResponse:
-      type: object
-      properties:
-        access_token:
-          type: string
-        token_type:
-          type: string
-        expires_in:
-          type: integer
-        refresh_token:
-          type: string
-        scope:
-          type: string
     StatusResponse:
       type: object
       properties:
         status:
           $ref: '#/components/schemas/Status'
-    Status:
-      type: object
-      description: Standard ecobee response status.
-      properties:
-        code:
-          type: integer
-          description: The status code (0 indicates success).
-        message:
-          type: string
-  responses:
-    ApiError:
-      description: An API error, described by a Status object.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/StatusResponse'
   securitySchemes:
     bearerAuth:
       type: http

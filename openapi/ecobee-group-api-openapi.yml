@@ -71,15 +71,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    GroupResponse:
-      type: object
-      properties:
-        groups:
-          type: array
-          items:
-            $ref: '#/components/schemas/Group'
-        status:
-          $ref: '#/components/schemas/Status'
     Selection:
       type: object
       description: Determines which thermostats and which sub-objects are returned or acted upon.
@@ -110,6 +101,39 @@ components:
           type: boolean
         includeProgram:
           type: boolean
+    Group:
+      type: object
+      properties:
+        groupRef:
+          type: string
+        groupName:
+          type: string
+        thermostats:
+          type: array
+          items:
+            type: string
+        synchronizeSystemMode:
+          type: boolean
+        synchronizeVacation:
+          type: boolean
+    GroupResponse:
+      type: object
+      properties:
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+        status:
+          $ref: '#/components/schemas/Status'
+    Status:
+      type: object
+      description: Standard ecobee response status.
+      properties:
+        code:
+          type: integer
+          description: The status code (0 indicates success).
+        message:
+          type: string
     GroupRequest:
       type: object
       required:
@@ -127,30 +151,6 @@ components:
       properties:
         status:
           $ref: '#/components/schemas/Status'
-    Status:
-      type: object
-      description: Standard ecobee response status.
-      properties:
-        code:
-          type: integer
-          description: The status code (0 indicates success).
-        message:
-          type: string
-    Group:
-      type: object
-      properties:
-        groupRef:
-          type: string
-        groupName:
-          type: string
-        thermostats:
-          type: array
-          items:
-            type: string
-        synchronizeSystemMode:
-          type: boolean
-        synchronizeVacation:
-          type: boolean
   responses:
     Unauthorized:
       description: Missing, invalid, or expired access token.
