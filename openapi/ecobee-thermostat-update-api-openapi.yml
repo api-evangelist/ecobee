@@ -50,20 +50,29 @@ paths:
         '500':
           $ref: '#/components/responses/ApiError'
 components:
-  responses:
-    ApiError:
-      description: An API error, described by a Status object.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/StatusResponse'
-    Unauthorized:
-      description: Missing, invalid, or expired access token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/StatusResponse'
   schemas:
+    UpdateThermostatRequest:
+      type: object
+      required:
+      - selection
+      properties:
+        selection:
+          $ref: '#/components/schemas/Selection'
+        thermostat:
+          $ref: '#/components/schemas/Thermostat'
+        functions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Function'
+    Status:
+      type: object
+      description: Standard ecobee response status.
+      properties:
+        code:
+          type: integer
+          description: The status code (0 indicates success).
+        message:
+          type: string
     Selection:
       type: object
       description: Determines which thermostats and which sub-objects are returned or acted upon.
@@ -94,6 +103,11 @@ components:
           type: boolean
         includeProgram:
           type: boolean
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
     Function:
       type: object
       description: A thermostat function to execute.
@@ -137,33 +151,19 @@ components:
           items:
             type: object
             additionalProperties: true
-    Status:
-      type: object
-      description: Standard ecobee response status.
-      properties:
-        code:
-          type: integer
-          description: The status code (0 indicates success).
-        message:
-          type: string
-    UpdateThermostatRequest:
-      type: object
-      required:
-      - selection
-      properties:
-        selection:
-          $ref: '#/components/schemas/Selection'
-        thermostat:
-          $ref: '#/components/schemas/Thermostat'
-        functions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Function'
-    StatusResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/Status'
+  responses:
+    ApiError:
+      description: An API error, described by a Status object.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StatusResponse'
+    Unauthorized:
+      description: Missing, invalid, or expired access token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StatusResponse'
   securitySchemes:
     bearerAuth:
       type: http

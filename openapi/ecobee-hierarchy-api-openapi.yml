@@ -153,23 +153,15 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    HierarchyThermostatRequest:
+    Status:
       type: object
-      required:
-      - operation
+      description: Standard ecobee response status.
       properties:
-        operation:
+        code:
+          type: integer
+          description: The status code (0 indicates success).
+        message:
           type: string
-          enum:
-          - register
-          - unregister
-          - move
-          - assign
-        setPath:
-          type: string
-        thermostats:
-          type: string
-          description: Comma-separated thermostat identifiers.
     HierarchySetRequest:
       type: object
       required:
@@ -188,6 +180,11 @@ components:
           type: string
         parentPath:
           type: string
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
     HierarchyUserRequest:
       type: object
       required:
@@ -208,20 +205,23 @@ components:
           type: array
           items:
             type: string
-    Status:
+    HierarchyThermostatRequest:
       type: object
-      description: Standard ecobee response status.
+      required:
+      - operation
       properties:
-        code:
-          type: integer
-          description: The status code (0 indicates success).
-        message:
+        operation:
           type: string
-    StatusResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/Status'
+          enum:
+          - register
+          - unregister
+          - move
+          - assign
+        setPath:
+          type: string
+        thermostats:
+          type: string
+          description: Comma-separated thermostat identifiers.
   responses:
     Unauthorized:
       description: Missing, invalid, or expired access token.

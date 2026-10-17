@@ -71,6 +71,27 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    GroupRequest:
+      type: object
+      required:
+      - selection
+      - groups
+      properties:
+        selection:
+          $ref: '#/components/schemas/Selection'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+    Status:
+      type: object
+      description: Standard ecobee response status.
+      properties:
+        code:
+          type: integer
+          description: The status code (0 indicates success).
+        message:
+          type: string
     Selection:
       type: object
       description: Determines which thermostats and which sub-objects are returned or acted upon.
@@ -101,6 +122,20 @@ components:
           type: boolean
         includeProgram:
           type: boolean
+    StatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+    GroupResponse:
+      type: object
+      properties:
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+        status:
+          $ref: '#/components/schemas/Status'
     Group:
       type: object
       properties:
@@ -116,41 +151,6 @@ components:
           type: boolean
         synchronizeVacation:
           type: boolean
-    GroupResponse:
-      type: object
-      properties:
-        groups:
-          type: array
-          items:
-            $ref: '#/components/schemas/Group'
-        status:
-          $ref: '#/components/schemas/Status'
-    Status:
-      type: object
-      description: Standard ecobee response status.
-      properties:
-        code:
-          type: integer
-          description: The status code (0 indicates success).
-        message:
-          type: string
-    GroupRequest:
-      type: object
-      required:
-      - selection
-      - groups
-      properties:
-        selection:
-          $ref: '#/components/schemas/Selection'
-        groups:
-          type: array
-          items:
-            $ref: '#/components/schemas/Group'
-    StatusResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/Status'
   responses:
     Unauthorized:
       description: Missing, invalid, or expired access token.
