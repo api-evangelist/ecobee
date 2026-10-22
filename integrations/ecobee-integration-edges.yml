@@ -62,6 +62,62 @@ edges:
       P856 not contradicting (Kin 2026-10-20 decision 2)
   detected_by: sweep-apple-mfi-ecosystem.py
   first_seen: '2026-10-21'
+- partner_name: US EPA ENERGY STAR
+  partner: null
+  partner_match: register
+  type: register
+  channel: standard-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://data.energystar.gov/d/8wj2-sec8
+  category: ENERGY STAR product certification
+  contract_reference:
+    register: ENERGY STAR Model Index, all currently certified models (data.energystar.gov/resource/8wj2-sec8)
+    standard: ENERGY STAR (US EPA product specifications)
+    spec_file: null
+    role: energy-star-partner
+    registered_name: ecobee, Inc.
+    register_id: https://data.energystar.gov/d/8wj2-sec8
+    matched_domain: ecobee.com
+    matched_by: domain
+    certified_products:
+    - product: Connected Thermostats
+      product_type: Connected Thermostats
+      lapsed: false
+      brands:
+      - Ecobee
+      first_certified: '2017-04-28'
+    - product: Smart Thermostats
+      product_type: Smart Thermostats
+      lapsed: false
+      connected: true
+      source_note: certified model in the category dataset; not (yet) in the Model Index
+      connected_protocols:
+      - Bluetooth
+      - Other
+      - Wi-Fi
+      demand_response:
+      - ENERGY STAR Program Requirements, Product Specification for CT Thermostat Products, V 1.0.  Eligibility
+        Criteria Demand Response Capabilities Summary descriptio
+      - Ecobee thermostats include an optional feature called Community Energy Savings which helps theuse of cleaner
+        energy and strengthen the grid by reducing demand a
+      - ecobee helps customers and utilities to avoid peak demand on the energy system (either electricity grid
+        or natural gas pipelines) by reducing demand during peak
+      - ecobee thermostats include an optional feature called Community Energy Savings which helps use cleaner energy
+        and strengthen the grid by reducing demand at peak
+    connected_product_types:
+    - Smart Thermostats
+    signal_note: 'certified_products = ONE entry per ENERGY STAR product category with a currently certified model
+      (the Model Index lists current certifications only, so lapsed is False; delisted models drop out); connected:
+      true where the category''s dataset flags connected / network capability for this partner''s models (Smart
+      Thermostats and Connected lighting are connected by definition). Brands are context; model counts are never
+      counted.'
+    detected_by: sweep-energy-star-certified-products.py
+    detected: '2026-10-22'
+    identity: wikidata Q5333159 'ecobee' P856 https://www.ecobee.com/
+    identity_source: wikidata P856 (labelled provenance step; Kin 2026-10-15 decision 1)
+  detected_by: sweep-energy-star-certified-products.py
+  first_seen: '2026-10-22'
 generated: '2026-10-13'
 method: searched
 checked:
@@ -69,5 +125,8 @@ checked:
 - https://csa-iot.org/csa-iot_products/
 - https://mfi.apple.com/en/account/accessory-search
 - https://partnernetwork.apple.com/
+- https://data.energystar.gov/api/views/metadata/v1
+- https://data.energystar.gov/resource/8wj2-sec8.json
+- https://www.energystar.gov/productfinder/
 source:
 - https://products.openadr.org/
