@@ -118,6 +118,31 @@ edges:
     identity_source: wikidata P856 (labelled provenance step; Kin 2026-10-15 decision 1)
   detected_by: sweep-energy-star-certified-products.py
   first_seen: '2026-10-22'
+- partner_name: IFTTT
+  partner: ifttt
+  partner_match: aggregator
+  type: marketplace
+  marketplace: ifttt-services
+  channel: ipaas-listing
+  relationship: ipaas-bridge
+  direction: third-party
+  evidence: https://ifttt.com/ecobee
+  category: null
+  contract_reference:
+    register: IFTTT service directory (ifttt.com/explore/services; ifttt.com/<service>)
+    spec_file: null
+    role: ipaas-connector:ifttt
+    registered_name: ecobee
+    matched_domain: ecobee.com
+    matched_by: domain
+    app_slug: ecobee
+    ifttt_category: Smart home & IoT
+    builder: unknown (the service page does not say who built it)
+    detected_by: sweep-ifttt-services.py
+    detected: '2026-10-23'
+    signal_note: one edge per (provider, platform); triggers, actions and applet counts are context, never read
+  detected_by: sweep-ifttt-services.py
+  first_seen: '2026-10-23'
 generated: '2026-10-13'
 method: searched
 checked:
@@ -128,5 +153,8 @@ checked:
 - https://data.energystar.gov/api/views/metadata/v1
 - https://data.energystar.gov/resource/8wj2-sec8.json
 - https://www.energystar.gov/productfinder/
+- https://ifttt.com/ecobee
+- https://ifttt.com/explore/services
+- https://ifttt.com/sitemap_services.xml
 source:
 - https://products.openadr.org/
